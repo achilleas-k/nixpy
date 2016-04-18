@@ -8,10 +8,17 @@
 
 from __future__ import (absolute_import, division, print_function)#, unicode_literals)
 
-from nixio.core import File, FileMode, Block, DataType, Section, Property, Value, \
-    Source, DataArray, RangeDimension, SetDimension, SampledDimension, \
-    DimensionType, Feature, LinkType, Tag, MultiTag, Group
-
+try:
+    from nixio.core import (File, FileMode, Block, DataType, Section, Property,
+                            Value, Source, DataArray, RangeDimension,
+                            SetDimension, SampledDimension, DimensionType,
+                            Feature, LinkType, Tag, MultiTag, Group)
+except ImportError:
+    from nixio.pycore import (File, FileMode, Block, DataType, Section,
+                              Property, Value, Source, DataArray,
+                              RangeDimension, SetDimension, SampledDimension,
+                              DimensionType, Feature, LinkType, Tag, MultiTag,
+                              Group)
 from nixio.block import BlockMixin
 from nixio.file import FileMixin
 from nixio.section import SectionMixin

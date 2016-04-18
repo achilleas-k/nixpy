@@ -8,7 +8,10 @@
 
 from __future__ import (absolute_import, division, print_function, unicode_literals)
 
-from nixio.core import Property, Value
+try:
+    from nixio.core import Property, Value
+except ImportError:
+    from nixio.pycore import Property, Value
 from nixio.util.inject import inject
 
 

@@ -11,7 +11,10 @@ from __future__ import (absolute_import, division, print_function, unicode_liter
 import sys
 
 import nixio.util.find as finders
-from nixio.core import Block
+try:
+    from nixio.core import Block
+except ImportError:
+    from nixio.pycore.block import Block
 from nixio.util.inject import inject
 from nixio.util.proxy_list import ProxyList
 import numpy as np

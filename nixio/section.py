@@ -12,7 +12,10 @@ import sys
 import functools
 
 import nixio.util.find as finders
-from nixio.core import Section
+try:
+    from nixio.core import Section
+except ImportError:
+    from nixio.pycore import Section
 from nixio.util.inject import inject
 from nixio.util.proxy_list import ProxyList
 from nixio.property import Value
