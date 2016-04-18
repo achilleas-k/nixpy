@@ -7,6 +7,12 @@
 # LICENSE file in the root of the Project.
 
 
+class DimensionType(object):
+    Sample = 1
+    Range = 2
+    Set = 3
+
+
 class Dimension(object):
 
     def __init__(self):

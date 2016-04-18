@@ -6,7 +6,26 @@
 # modification, are permitted under the terms of the BSD License. See
 # LICENSE file in the root of the Project.
 
+import numpy as np
 from .entity import Entity
+
+
+class DataType(object):
+    # TODO: Check type equivalence with NIX
+    Bool = np.bool_
+    Char = np.string_  # NOTE: Perhaps S1?
+    Float = np.float_
+    Double = np.double
+    Int8 = np.int8
+    Int16 = np.int16
+    Int32 = np.int32
+    Int64 = np.int64
+    UIntu8 = np.uint8
+    UInt16 = np.uint16
+    UInt32 = np.uint32
+    UInt64 = np.uint64
+    String = np.string_
+    Nothing = None
 
 
 class Property(Entity):

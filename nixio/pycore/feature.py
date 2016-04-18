@@ -9,6 +9,12 @@
 from .entity import Entity
 
 
+class LinkType(object):
+    Tagged = 1
+    Untagged = 2
+    Indexed = 3
+
+
 class Feature(Entity):
 
     def __init__(self):
