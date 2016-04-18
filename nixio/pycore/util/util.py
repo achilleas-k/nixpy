@@ -1,5 +1,5 @@
 from uuid import uuid4, UUID
-
+from .. import exceptions
 
 def create_id():
     return uuid4()
@@ -50,3 +50,11 @@ def check_empty_str(string, field_name):
 def check_name_or_id(name_or_id):
     if not name_or_id:
         raise ValueError("String provided for entity name is empty!")
+
+
+def check_entity_input(entity, raise_exception=True):
+    if entity and entity.is_valid_entity():
+        return True
+    if raise_exception:
+        raise exceptions.UninitializedEntity()
+    return False
