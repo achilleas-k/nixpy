@@ -13,10 +13,9 @@ class Entity(object):
 
     _h5attrs = ["created_at", "updated_at", "id"]
 
-    def __init__(self, group):
-        self._h5obj = group
-        if id_:
-            self.entity_group.entity_id = id_
+    def __init__(self, h5obj, id_):
+        self._h5obj = h5obj
+        self.id = id_
         self.created_at = str(int(time()))
         self.updated_at = str(int(time()))
 
@@ -34,7 +33,7 @@ class Entity(object):
         try:
             if item not in self._h5attrs:
                 raise AttributeError
-            # Check if item in attrs?
+            # Check if item in _h5obj.attrs?
             self._h5obj.attrs.modify(item, value)
         except (KeyError, AttributeError):
             raise AttributeError("{} has no attribute {}".format(
@@ -52,36 +51,35 @@ class Entity(object):
 
 class NamedEntity(Entity):
 
-    def __init__(self):
-        super(NamedEntity, self).__init__()
-        self.name = None
-        self.type = None
-        self.definition = None
+    def __init__(self, h5obj, id_, name, type_):
+        super(NamedEntity, self).__init__(h5obj, id_)
+        self._h5attrs.extend(["name", "type", "definition"])
+        self.name = name
+        self.type = type_
 
 
 class EntityWithMetadata(NamedEntity):
 
-    def __init__(self):
-        super(EntityWithMetadata, self).__init__()
-        self.metadata = None
+    def __init__(self, h5obj, id_, name, type_):
+        super(EntityWithMetadata, self).__init__(h5obj, id_, name, type_)
+        self.metadata = None  # TODO: Metadata section
 
 
 class EntityWithSources(EntityWithMetadata):
 
-    def __init__(self):
-        super(EntityWithSources, self).__init__()
+    def __init__(self, h5obj, id_, name, type_):
+        super(EntityWithSources, self).__init__(h5obj, id_, name, type_)
+        self.sources = None  # TODO: Sources
 
     def _source_count(self):
-        pass
-
-    def _has_source_by_id(self, id_):
-        pass
+        return len(self._h5obj["sources"])
 
     def _get_source_by_id(self, id_):
-        pass
+        return self._h5obj["sources"][id_]
 
     def _get_source_by_pos(self, pos):
-        pass
+        # TODO: Check if h5py ordering guaranteed stable
+        return list(self._h5obj["sources"].values())[pos]
 
     def _add_source_by_id(self, source):
         pass
