@@ -68,9 +68,8 @@ class File(object):
         util.check_entity_name_and_type(name, type_)
         if name in self:
             raise ValueError("Block with the given name already exists!")
-        h5block = self._h5file.create_group(name)
+        h5block = self._data.create_group(name)
         block = Block(h5block, name, type_)
-        self._blocks[name] = block
         return block
 
     def _block_count(self):
