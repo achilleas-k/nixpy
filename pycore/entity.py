@@ -6,19 +6,49 @@
 # modification, are permitted under the terms of the BSD License. See
 # LICENSE file in the root of the Project.
 
+import h5py
+from time import time
+
 
 class Entity(object):
 
-    def __init__(self):
-        self.id = None
-        self.created_at = None
-        self.updated_at = None
+    _h5attrs = ["created_at", "updated_at", "id"]
+
+    def __init__(self, group):
+        self._h5obj = group
+        if id_:
+            self.entity_group.entity_id = id_
+        self.created_at = str(int(time()))
+        self.updated_at = str(int(time()))
+
+    def __getattr__(self, item):
+        try:
+            if item not in self._h5attrs:
+                raise AttributeError
+            return self._h5obj.attrs.get(item)
+        except (KeyError, AttributeError):
+            raise AttributeError("{} has no attribute {}".format(
+                type(self), item
+            ))
+
+    def __setattr__(self, item, value):
+        try:
+            if item not in self._h5attrs:
+                raise AttributeError
+            # Check if item in attrs?
+            self._h5obj.attrs.modify(item, value)
+        except (KeyError, AttributeError):
+            raise AttributeError("{} has no attribute {}".format(
+                type(self), item
+            ))
 
     def force_created_at(self, t):
-        self.created_at = t
+        # TODO: Check if convertible to date
+        self.created_at = str(t)
 
     def force_updated_at(self, t):
-        self.updated_at = t
+        # TODO: Check if convertible to date
+        self.updated_at = str(t)
 
 
 class NamedEntity(Entity):
