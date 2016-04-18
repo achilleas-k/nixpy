@@ -1,5 +1,7 @@
+from time import time
 from uuid import uuid4, UUID
 from .. import exceptions
+
 
 def create_id():
     return uuid4()
@@ -58,3 +60,7 @@ def check_entity_input(entity, raise_exception=True):
     if raise_exception:
         raise exceptions.UninitializedEntity()
     return False
+
+
+def nowstr():
+    return str(int(time()))
