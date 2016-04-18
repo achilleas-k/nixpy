@@ -8,13 +8,15 @@
 
 from __future__ import absolute_import
 from .entity import EntityWithMetadata
+from . import util
+from . import exceptions
 
 
 class Block(EntityWithMetadata):
 
-    def __init__(self):
-        super(Block, self).__init__()
-        pass
+    def __init__(self, h5obj, name, type_):
+        id_ = util.create_id()
+        super(Block, self).__init__(h5obj, id_, name, type_)
 
     def _create_data_array(self, name, type_, data_type, shape):
         pass
