@@ -7,6 +7,12 @@
 # LICENSE file in the root of the Project.
 
 
+class FileMode(object):
+    ReadOnly = 'r'
+    ReadWrite = 'a'
+    Overwrite = 'w'
+
+
 class File(object):
 
     def __init__(self):
