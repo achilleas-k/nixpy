@@ -6,19 +6,18 @@
 # modification, are permitted under the terms of the BSD License. See
 # LICENSE file in the root of the Project.
 
+from . import util
 from .entity import EntityWithSources
-from .data_set import DataSet
 
 
-class DataArray(EntityWithSources, DataSet):
+class DataArray(EntityWithSources):
 
-    def __init__(self):
-        EntityWithSources.__init__()
-        DataSet.__init__()
-        self.label = None
-        self.unit = None
-        self.expansion_origin = None
-        self.polynom_coefficients = None
+    def __init__(self, h5parent, name, type_, data, shape):
+        id_ = util.create_id()
+        h5obj = h5parent.create_dataset(name=name, data=data)
+        super(DataArray, self).__init__(h5obj, id_, name, type_)
+        self._h5attrs.extend(["label", "unit", "expansion_origin",
+                              "polynom_coefficients"])
 
     def create_set_dimension(self):
         pass
