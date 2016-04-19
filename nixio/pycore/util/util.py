@@ -4,7 +4,7 @@ from .. import exceptions
 
 
 def create_id():
-    return uuid4()
+    return str(uuid4())
 
 
 def check_name(name):

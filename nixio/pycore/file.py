@@ -30,7 +30,7 @@ class File(object):
         self.created_at = util.nowstr()
         self.updated_at = util.nowstr()
         self._root = self._h5file["/"]
-        self._data = self._root["data"]
+        self._data = self._root.create_group("data")
 
     @classmethod
     def open(cls, path, mode=FileMode.ReadWrite):
@@ -80,7 +80,7 @@ class File(object):
         pass
 
     def close(self):
-        pass
+        self._h5file.close()
 
     def validate(self):
         pass
