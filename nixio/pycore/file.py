@@ -22,37 +22,15 @@ class FileMode(object):
 
 class File(object):
 
-    _h5attrs = ["version", "format", "created_at", "updated_at"]
-
     def __init__(self, path, mode=FileMode.ReadWrite):
         self._h5file = h5py.File(name=path, mode=mode)
+        self._h5obj = self._h5file  # convenience prop synonym
         self.format = np.string_("nix")
         self.version = [1, 0, 0]
         self.created_at = util.nowstr()
         self.updated_at = util.nowstr()
         self._root = self._h5file["/"]
         self._data = self._root["data"]
-
-    def __getattr__(self, item):
-        try:
-            if item not in self._h5attrs:
-                raise AttributeError
-            return self._h5obj.attrs.get(item)
-        except (KeyError, AttributeError):
-            raise AttributeError("{} has no attribute {}".format(
-                type(self), item
-            ))
-
-    def __setattr__(self, item, value):
-        try:
-            if item not in self._h5attrs:
-                raise AttributeError
-            # Check if item in _h5obj.attrs?
-            self._h5obj.attrs.modify(item, value)
-        except (KeyError, AttributeError):
-            raise AttributeError("{} has no attribute {}".format(
-                type(self), item
-            ))
 
     @classmethod
     def open(cls, path, mode=FileMode.ReadWrite):
@@ -106,3 +84,5 @@ class File(object):
 
     def validate(self):
         pass
+
+util.create_h5props(File, ("version", "format", "created_at", "updated_at"))

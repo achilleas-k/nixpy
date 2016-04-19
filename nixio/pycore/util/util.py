@@ -65,3 +65,18 @@ def check_entity_input(entity, raise_exception=True):
 
 def nowstr():
     return str(int(time()))
+
+
+def create_h5props(cls, attributes):
+
+    def makeprop(propname):
+        def getter(self):
+            return self._h5obj.attrs.get(propname)
+
+        def setter(self, value):
+            self._h5obj.attrs.modify(propname, value)
+        return property(fget=getter, fset=setter)
+
+    for attr in attributes:
+        setattr(cls, attr, makeprop(attr))
+
