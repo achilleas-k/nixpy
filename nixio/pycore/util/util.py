@@ -16,6 +16,7 @@ def sanitize_name(name):
 
 
 def sanitize_unit(unit):
+    # TODO: Fix unicode char for py2
     return unit.replace("mu", "u").replace("μ", "u")
 
 
