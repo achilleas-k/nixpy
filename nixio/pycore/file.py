@@ -31,6 +31,8 @@ class File(object):
         self.updated_at = util.nowstr()
         self._root = self._h5file["/"]
         self._data = self._root.create_group("data")
+        self._blocks_ids = dict()
+        self._blocks_names = dict()
 
     @classmethod
     def open(cls, path, mode=FileMode.ReadWrite):
@@ -47,19 +49,29 @@ class File(object):
         if name in self._data:
             raise ValueError("Block with the given name already exists!")
         block = Block(self._data, name, type_)
+        self._add_block(block)
         return block
+
+    def _add_block(self, block):
+        # Two dictionaries per container indexed by id and name
+        self._blocks_ids[block.id] = block
+        self._blocks_names[block.name] = block
 
     def _block_count(self):
         pass
 
-    def _get_block_by_id(self):
-        pass
+    def _get_block_by_id(self, id_):
+        return self._blocks_ids[id_]
 
-    def _get_block_by_pos(self):
-        pass
+    def _get_block_by_pos(self, pos):
+        return list(self._blocks_ids.values())[pos]
 
-    def _delete_block_by_id(self):
-        pass
+    def _delete_block_by_id(self, id_):
+        name = self._blocks_ids[id_].name
+        # Delete file object and Entity from dictionaries
+        del self._data[name]
+        del self._blocks_ids[id_]
+        del self._blocks_names[name]
 
     def create_section(self):
         pass
