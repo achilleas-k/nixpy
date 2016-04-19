@@ -1,6 +1,6 @@
 from .property import DataType, Property
 from .section import Section
-# frore.value import Value
+from .value import Value
 from .source import Source
 from .data_array import DataArray
 from .dimensions import (RangeDimension, SetDimension, SampledDimnension,
