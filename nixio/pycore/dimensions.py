@@ -21,10 +21,10 @@ class Dimension(object):
         self.label = None
 
 
-class SampledDimnension(Dimension):
+class SampledDimension(Dimension):
 
     def __init__(self):
-        super(SampledDimnension, self).__init__()
+        super(SampledDimension, self).__init__()
         self.unit = None
         self.sampling_interval = None
         self.offset = None
