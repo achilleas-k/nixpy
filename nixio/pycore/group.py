@@ -7,12 +7,15 @@
 # LICENSE file in the root of the Project.
 
 from .entity import EntityWithSources
+from . import util
 
 
 class Group(EntityWithSources):
 
-    def __init__(self):
-        super(Group, self).__init__()
+    def __init__(self, h5parent, name, type_):
+        id_ = util.create_id()
+        h5obj = h5parent.create_group(name)
+        super(Group, self).__init__(h5obj, id_, name, type_)
 
     def _add_data_array_by_id(self):
         pass

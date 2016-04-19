@@ -7,12 +7,15 @@
 # LICENSE file in the root of the Project.
 
 from .entity import EntityWithMetadata
+from . import util
 
 
 class Source(EntityWithMetadata):
 
-    def __init__(self):
-        super(Source, self).__init__()
+    def __init__(self, h5parent, name, type_):
+        id_ = util.create_id()
+        h5obj = h5parent.create_group(name)
+        super(Source, self).__init__(h5obj, id_, name, type_)
 
     def create_source(self):
         pass
