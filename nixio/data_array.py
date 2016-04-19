@@ -10,8 +10,10 @@ from __future__ import (absolute_import, division, print_function, unicode_liter
 
 import sys
 
-from nixio.core import DataArray
-from nixio.core import DataSet
+try:
+    from nixio.core import DataArray, DataSet
+except ImportError:
+    from nixio.pycore import DataArray, DataSet
 from nixio.util.inject import inject
 
 import numpy as np

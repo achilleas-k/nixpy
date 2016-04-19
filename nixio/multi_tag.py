@@ -8,7 +8,10 @@
 
 from __future__ import (absolute_import, division, print_function, unicode_literals)
 
-from nixio.core import MultiTag
+try:
+    from nixio.core import MultiTag
+except ImportError:
+    from nixio.pycore import MultiTag
 from nixio.util.inject import inject
 from nixio.tag import ReferenceProxyList, FeatureProxyList
 
