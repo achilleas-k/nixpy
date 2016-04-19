@@ -41,6 +41,7 @@ class Block(EntityWithMetadata):
     def _delete_data_array_by_id(self, id_):
         self.data_arrays.remove(id_)
 
+    # MultiTag
     def create_multi_tag(self, name, type_, positions):
         util.check_entity_name_and_type(name, type_)
         util.check_entity_input(positions)
@@ -64,6 +65,7 @@ class Block(EntityWithMetadata):
     def _delete_multi_tag_by_id(self, id_):
         pass
 
+    # Tag
     def create_tag(self, name, type_, position):
         util.check_entity_name_and_type(name, type_)
         tags = self._h5obj["tags"]
@@ -84,6 +86,7 @@ class Block(EntityWithMetadata):
     def _delete_tag_by_id(self, id_):
         pass
 
+    # Source
     def _create_source(self, name, type_):
         util.check_entity_name_and_type(name, type_)
         sources = self._h5obj["sources"]
@@ -104,6 +107,7 @@ class Block(EntityWithMetadata):
     def _delete_source_by_id(self, id_):
         pass
 
+    # Group
     def create_group(self, name, type_):
         util.check_entity_name_and_type(name, type_)
         groups = self._h5obj["groups"]
