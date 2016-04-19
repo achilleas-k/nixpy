@@ -48,3 +48,7 @@ class DataArray(EntityWithSources):
 
     def _get_dimension_by_pos(self, index):
         pass
+
+
+class DataSet(object):
+    pass
