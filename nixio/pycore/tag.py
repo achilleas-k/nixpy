@@ -7,15 +7,16 @@
 # LICENSE file in the root of the Project.
 
 from .entity import EntityWithSources
+from . import util
 
 
 class Tag(EntityWithSources):
 
-    def __init__(self):
-        super(Tag, self).__init__()
-        self.units = None
-        self.position = None
-        self.extent = None
+    def __init__(self, h5parent, name, type_, position):
+        id_ = util.create_id()
+        h5obj = h5parent.create_dataset(name=name, data=position)
+        super(Tag, self).__init__(h5obj, id_, name, type_)
+        self._h5attrs.extend(["position", "extent", "units"])
 
     def _add_reference_by_id(self):
         pass

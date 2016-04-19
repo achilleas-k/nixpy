@@ -7,15 +7,16 @@
 # LICENSE file in the root of the Project.
 
 from .entity import EntityWithSources
+from . import util
 
 
 class MultiTag(EntityWithSources):
 
-    def __init__(self):
-        super(MultiTag, self).__init__()
-        self.positions = None
-        self.extents = None
-        self.units = None
+    def __init__(self, h5parent, name, type_, positions):
+        id_ = util.create_id()
+        h5obj = h5parent.create_dataset(name=name, data=positions)
+        super(MultiTag, self).__init__(h5obj, id_, name, type_)
+        self._h5attrs.extend(["positions", "extents", "units"])
 
     def _add_reference_by_id(self):
         pass
