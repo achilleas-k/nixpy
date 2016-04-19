@@ -128,9 +128,10 @@ class Block(EntityWithMetadata):
     def _delete_group_by_id(self, id_):
         pass
 
+    # TODO: Fix str and repr
     def __str__(self):
-        pass
+        return "Block: {}".format(self.name)
 
     def __repr__(self):
-        pass
+        return "Block: {}".format(self.name)
 
