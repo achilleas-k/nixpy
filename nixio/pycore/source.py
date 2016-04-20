@@ -19,7 +19,7 @@ class Source(EntityWithMetadata):
         super(Source, self).__init__(h5obj, id_, name, type_)
         self._source_group = self._h5obj.create_group("sources")
         self._sources_id = dict()
-        self._sources_name = dict()
+        # self._sources_name = dict()
         self._sources_list = list()
 
     # Source

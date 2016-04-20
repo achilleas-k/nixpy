@@ -96,35 +96,35 @@ def create_h5props(cls, attributes):
 
 def create_container_methods(cls, childclass):
     iddict = "_{}s_id".format(childclass)
-    namedict = "_{}s_id".format(childclass)
+    # namedict = "_{}s_name".format(childclass)
     h5cont = "_{}_group".format(childclass)
     objlist = "_{}s_list".format(childclass)
 
     def idgetter(self, id_):
         return getattr(self, iddict).get(id_)
 
-    def namegetter(self, name):
-        return getattr(self, namedict).get(name)
+    # def namegetter(self, name):
+    #     return getattr(self, namedict).get(name)
 
     def posgetter(self, pos):
         return getattr(self, objlist)[pos]
 
     def adder(self, item):
         getattr(self, iddict)[item.id] = item
-        getattr(self, namedict)[item.name] = item
+        # getattr(self, namedict)[item.name] = item
         getattr(self, objlist).append(item)
 
     def deleter(self, id_):
         name = getattr(self, iddict)[id_].name
         del getattr(self, h5cont)[name]
         del getattr(self, iddict)[id_]
-        del getattr(self, namedict)[name]
+        # del getattr(self, namedict)[name]
 
     def counter(self):
         return len(getattr(self, h5cont))
 
     setattr(cls, "_get_{}_by_id".format(childclass), idgetter)
-    setattr(cls, "_get_{}_by_name".format(childclass), namegetter)
+    # setattr(cls, "_get_{}_by_name".format(childclass), namegetter)
     setattr(cls, "_get_{}_by_pos".format(childclass), posgetter)
     setattr(cls, "_add_{}".format(childclass), adder)
     setattr(cls, "_delete_{}_by_id".format(childclass), deleter)
