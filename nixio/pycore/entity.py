@@ -8,6 +8,7 @@
 
 from time import time
 from . import util
+from . import exceptions
 
 
 class Entity(object):
@@ -15,16 +16,16 @@ class Entity(object):
     def __init__(self, h5obj, id_):
         self._h5obj = h5obj
         self.id = id_
-        self.created_at = str(int(time()))
-        self.updated_at = str(int(time()))
+        self.created_at = int(time())
+        self.updated_at = int(time())
 
     def force_created_at(self, t):
         # TODO: Check if convertible to date
-        self.created_at = str(t)
+        self.created_at = t
 
     def force_updated_at(self, t):
         # TODO: Check if convertible to date
-        self.updated_at = str(t)
+        self.updated_at = t
 
 util.create_h5props(Entity, ("created_at", "updated_at", "id"))
 
@@ -50,21 +51,8 @@ class EntityWithSources(EntityWithMetadata):
 
     def __init__(self, h5obj, id_, name, type_):
         super(EntityWithSources, self).__init__(h5obj, id_, name, type_)
-        self.sources = None  # TODO: Sources
+        self._source_group = self._h5obj.create_group("sources")
+        self._sources_id = dict()
+        self._sources_name = dict()
 
-    def _source_count(self):
-        return len(self._h5obj["sources"])
-
-    def _get_source_by_id(self, id_):
-        return self._h5obj["sources"][id_]
-
-    def _get_source_by_pos(self, pos):
-        # TODO: Check if h5py ordering guaranteed stable
-        return list(self._h5obj["sources"].values())[pos]
-
-    def _add_source_by_id(self, source):
-        pass
-
-    def _remove_source_by_id(self, id_):
-        pass
-
+util.create_container_methods(EntityWithSources, "source")

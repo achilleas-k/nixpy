@@ -14,9 +14,8 @@ class MultiTag(EntityWithSources):
 
     def __init__(self, h5parent, name, type_, positions):
         id_ = util.create_id()
-        h5obj = h5parent.create_dataset(name=name, data=positions)
+        h5obj = h5parent.create_group(name)
         super(MultiTag, self).__init__(h5obj, id_, name, type_)
-        self._h5attrs.extend(["positions", "extents", "units"])
 
     def _add_reference_by_id(self):
         pass

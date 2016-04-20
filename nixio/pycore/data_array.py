@@ -14,10 +14,8 @@ class DataArray(EntityWithSources):
 
     def __init__(self, h5parent, name, type_, data, shape):
         id_ = util.create_id()
-        h5obj = h5parent.create_dataset(name=name, data=data)
+        h5obj = h5parent.create_group(name)
         super(DataArray, self).__init__(h5obj, id_, name, type_)
-        self._h5attrs.extend(["label", "unit", "expansion_origin",
-                              "polynom_coefficients"])
 
     def create_set_dimension(self):
         pass

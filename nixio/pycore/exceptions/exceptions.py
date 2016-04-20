@@ -12,3 +12,4 @@ class UninitializedEntity(Exception):
     def __init__(self, *args, **kwargs):
         self.message = "The Entity being accessed is uninitialized or empty."
         super(UninitializedEntity, self).__init__(self.message, *args, **kwargs)
+
