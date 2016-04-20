@@ -6,17 +6,21 @@
 # modification, are permitted under the terms of the BSD License. See
 # LICENSE file in the root of the Project.
 
-from .entity import EntityWithSources
+from .entity import EntityWithMetadata
 from . import util
 from . import exceptions
 
 
-class Source(EntityWithSources):
+class Source(EntityWithMetadata):
 
     def __init__(self, h5parent, name, type_):
         id_ = util.create_id()
         h5obj = h5parent.create_group(name)
         super(Source, self).__init__(h5obj, id_, name, type_)
+        self._source_group = self._h5obj.create_group("sources")
+        self._sources_id = dict()
+        self._sources_name = dict()
+        self._sources_list = list()
 
     # Source
     def create_source(self, name, type_):
@@ -33,4 +37,4 @@ class Source(EntityWithSources):
     def __repr__(self):
         pass
 
-
+util.create_container_methods(Source, "source")

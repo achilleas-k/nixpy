@@ -7,13 +7,13 @@
 # LICENSE file in the root of the Project.
 
 from __future__ import absolute_import
-from .entity import EntityWithSources
+from .entity import EntityWithMetadata
 from . import util
 from . import exceptions
 from . import Group, DataArray, MultiTag, Tag, Source
 
 
-class Block(EntityWithSources):
+class Block(EntityWithMetadata):
 
     def __init__(self, h5parent, name, type_):
         id_ = util.create_id()
@@ -23,12 +23,14 @@ class Block(EntityWithSources):
         self._init_container("tag")
         self._init_container("multi_tag")
         self._init_container("group")
+        self._init_container("source")
 
     def _init_container(self, childclass):
         setattr(self, "_{}_group".format(childclass),
                 self._h5obj.create_group(childclass + "s"))
         setattr(self, "_{}s_id".format(childclass), dict())
         setattr(self, "_{}s_name".format(childclass), dict())
+        setattr(self, "_{}s_list".format(childclass), list())
 
     # DataArray
     def _create_data_array(self, name, type_, data_type, shape):
@@ -79,15 +81,9 @@ class Block(EntityWithSources):
         self._add_group(grp)
         return grp
 
-    # TODO: Fix str and repr
-    def __str__(self):
-        return "Block: {}".format(self.name)
-
-    def __repr__(self):
-        return "Block: {}".format(self.name)
-
 
 util.create_container_methods(Block, "data_array")
 util.create_container_methods(Block, "tag")
 util.create_container_methods(Block, "multi_tag")
 util.create_container_methods(Block, "group")
+util.create_container_methods(Block, "source")

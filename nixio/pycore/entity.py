@@ -37,6 +37,14 @@ class NamedEntity(Entity):
         self.name = name
         self.type = type_
 
+    # TODO: Fix str and repr
+    def __str__(self):
+        print(self.name)
+        return "{}: {}".format(type(self).__name__, self.name)
+
+    def __repr__(self):
+        return "{}: {}".format(type(self).__name__, self.name)
+
 util.create_h5props(NamedEntity, ("name", "type", "definition"))
 
 
@@ -51,8 +59,3 @@ class EntityWithSources(EntityWithMetadata):
 
     def __init__(self, h5obj, id_, name, type_):
         super(EntityWithSources, self).__init__(h5obj, id_, name, type_)
-        self._source_group = self._h5obj.create_group("sources")
-        self._sources_id = dict()
-        self._sources_name = dict()
-
-util.create_container_methods(EntityWithSources, "source")
