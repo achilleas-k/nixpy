@@ -20,7 +20,7 @@ class Source(EntityWithMetadata):
         self._source_group = self._h5obj.create_group("sources")
         self._sources_id = dict()
         # self._sources_name = dict()
-        self._sources_list = list()
+        # self._sources_list = list()
 
     # Source
     def create_source(self, name, type_):

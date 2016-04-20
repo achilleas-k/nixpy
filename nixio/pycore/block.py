@@ -30,7 +30,7 @@ class Block(EntityWithMetadata):
                 self._h5obj.create_group(childclass + "s"))
         setattr(self, "_{}s_id".format(childclass), dict())
         # setattr(self, "_{}s_name".format(childclass), dict())
-        setattr(self, "_{}s_list".format(childclass), list())
+        # setattr(self, "_{}s_list".format(childclass), list())
 
     # DataArray
     def _create_data_array(self, name, type_, data_type, shape):

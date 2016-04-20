@@ -98,7 +98,7 @@ def create_container_methods(cls, childclass):
     iddict = "_{}s_id".format(childclass)
     # namedict = "_{}s_name".format(childclass)
     h5cont = "_{}_group".format(childclass)
-    objlist = "_{}s_list".format(childclass)
+    # objlist = "_{}s_list".format(childclass)
 
     def idgetter(self, id_):
         return getattr(self, iddict).get(id_)
@@ -107,12 +107,13 @@ def create_container_methods(cls, childclass):
     #     return getattr(self, namedict).get(name)
 
     def posgetter(self, pos):
-        return getattr(self, objlist)[pos]
+        # return getattr(self, objlist)[pos]
+        return list(getattr(self, iddict).values())[pos]
 
     def adder(self, item):
         getattr(self, iddict)[item.id] = item
         # getattr(self, namedict)[item.name] = item
-        getattr(self, objlist).append(item)
+        # getattr(self, objlist).append(item)
 
     def deleter(self, id_):
         name = getattr(self, iddict)[id_].name
