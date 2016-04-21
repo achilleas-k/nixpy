@@ -37,13 +37,13 @@ class NamedEntity(Entity):
         self.name = name
         self.type = type_
 
-    # TODO: Fix str and repr
     def __str__(self):
-        print(self.name)
-        return "{}: {}".format(type(self).__name__, self.name)
+        return "{}: {{name = {}, type = {}, id = {}}}".format(
+            type(self).__name__, self.name, self.type, self.id
+        )
 
     def __repr__(self):
-        return "{}: {}".format(type(self).__name__, self.name)
+        return self.__str__()
 
 util.create_h5props(NamedEntity, ("name", "type", "definition"))
 
