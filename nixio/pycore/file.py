@@ -24,7 +24,7 @@ class File(object):
 
     def __init__(self, path, mode=FileMode.ReadWrite):
         self._h5file = h5py.File(name=path, mode=mode)
-        self._h5obj = self._h5file  # convenience prop synonym
+        self._h5obj = self._h5file  # convenience synonym
         self.format = np.string_("nix")
         self.version = [1, 0, 0]
         self.created_at = util.nowstr()
@@ -32,7 +32,7 @@ class File(object):
         self._root = self._h5file["/"]
         self._data = self._root.create_group("data")
         self._blocks_ids = dict()
-        self._blocks_names = dict()
+        # self._blocks_names = dict()
 
     @classmethod
     def open(cls, path, mode=FileMode.ReadWrite):
@@ -48,14 +48,14 @@ class File(object):
         util.check_entity_name_and_type(name, type_)
         if name in self._data:
             raise ValueError("Block with the given name already exists!")
-        block = Block(self._data, name, type_)
+        block = Block(self, self._data, name, type_)
         self._add_block(block)
         return block
 
     def _add_block(self, block):
         # Two dictionaries per container indexed by id and name
         self._blocks_ids[block.id] = block
-        self._blocks_names[block.name] = block
+        # self._blocks_names[block.name] = block
 
     def _block_count(self):
         pass
@@ -71,7 +71,7 @@ class File(object):
         # Delete file object and Entity from dictionaries
         del self._data[name]
         del self._blocks_ids[id_]
-        del self._blocks_names[name]
+        # del self._blocks_names[name]
 
     def create_section(self):
         pass

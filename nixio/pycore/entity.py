@@ -13,7 +13,8 @@ from . import exceptions
 
 class Entity(object):
 
-    def __init__(self, h5obj, id_):
+    def __init__(self, file, h5obj, id_):
+        self._file = file
         self._h5obj = h5obj
         self.id = id_
         self.created_at = int(time())
@@ -32,8 +33,8 @@ util.create_h5props(Entity, ("created_at", "updated_at", "id"))
 
 class NamedEntity(Entity):
 
-    def __init__(self, h5obj, id_, name, type_):
-        super(NamedEntity, self).__init__(h5obj, id_)
+    def __init__(self, file, h5obj, id_, name, type_):
+        super(NamedEntity, self).__init__(file, h5obj, id_)
         self.name = name
         self.type = type_
 
@@ -50,12 +51,14 @@ util.create_h5props(NamedEntity, ("name", "type", "definition"))
 
 class EntityWithMetadata(NamedEntity):
 
-    def __init__(self, h5obj, id_, name, type_):
-        super(EntityWithMetadata, self).__init__(h5obj, id_, name, type_)
+    def __init__(self, file, h5obj, id_, name, type_):
+        super(EntityWithMetadata, self).__init__(file, h5obj, id_, name,
+                                                 type_)
         self.metadata = None  # TODO: Metadata section
 
 
 class EntityWithSources(EntityWithMetadata):
 
-    def __init__(self, h5obj, id_, name, type_):
-        super(EntityWithSources, self).__init__(h5obj, id_, name, type_)
+    def __init__(self, file, block, h5obj, id_, name, type_):
+        super(EntityWithSources, self).__init__(file, h5obj, id_, name, type_)
+        self._block = block

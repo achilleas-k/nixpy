@@ -15,10 +15,10 @@ from . import Group, DataArray, MultiTag, Tag, Source
 
 class Block(EntityWithMetadata):
 
-    def __init__(self, h5parent, name, type_):
+    def __init__(self, file, h5parent, name, type_):
         id_ = util.create_id()
         h5obj = h5parent.create_group(name)
-        super(Block, self).__init__(h5obj, id_, name, type_)
+        super(Block, self).__init__(file, h5obj, id_, name, type_)
         self._init_container("data_array")
         self._init_container("tag")
         self._init_container("multi_tag")
@@ -37,7 +37,7 @@ class Block(EntityWithMetadata):
         util.check_entity_name_and_type(name, type_)
         if name in self._data_array_group:
             raise exceptions.DuplicateName("create_data_array")
-        da = DataArray(self._data_array_group, name, type_, data_type, shape)
+        da = DataArray(self._file, self, name, type_, data_type, shape)
         self._add_data_array(da)
         return da
 
@@ -50,7 +50,7 @@ class Block(EntityWithMetadata):
         multi_tags = self._h5obj["multi_tags"]
         if name in multi_tags:
             raise exceptions.DuplicateName("create_multi_tag")
-        mtag = MultiTag(multi_tags, name, type_, positions)
+        mtag = MultiTag(self._file, self, name, type_, positions)
         self._add_multi_tag(mtag)
         return mtag
 
@@ -59,7 +59,7 @@ class Block(EntityWithMetadata):
         util.check_entity_name_and_type(name, type_)
         if name in self._tag_group:
             raise exceptions.DuplicateName("create_tag")
-        tag = Tag(self._tag_group, name, type_, position)
+        tag = Tag(self._file, self, name, type_, position)
         self._add_tag(tag)
         return tag
 
@@ -68,7 +68,7 @@ class Block(EntityWithMetadata):
         util.check_entity_name_and_type(name, type_)
         if name in self._source_group:
             raise exceptions.DuplicateName("create_source")
-        src = Source(self._source_group, name, type_)
+        src = Source(self._file, self, name, type_)
         self._add_source(src)
         return src
 
@@ -77,7 +77,7 @@ class Block(EntityWithMetadata):
         util.check_entity_name_and_type(name, type_)
         if name in self._group_group:
             raise exceptions.DuplicateName("create_group")
-        grp = Group(self._group_group, name, type_)
+        grp = Group(self._file, self, name, type_)
         self._add_group(grp)
         return grp
 

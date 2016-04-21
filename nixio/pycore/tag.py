@@ -12,10 +12,10 @@ from . import util
 
 class Tag(EntityWithSources):
 
-    def __init__(self, h5parent, name, type_, position):
+    def __init__(self, file, block, name, type_, position):
         id_ = util.create_id()
-        h5obj = h5parent.create_group(name)
-        super(Tag, self).__init__(h5obj, id_, name, type_)
+        h5obj = block._h5obj["tags"].create_group(name)
+        super(Tag, self).__init__(file, block, h5obj, id_, name, type_)
 
     def _add_reference_by_id(self):
         pass

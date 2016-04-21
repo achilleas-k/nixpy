@@ -12,10 +12,11 @@ from . import util
 
 class Group(EntityWithSources):
 
-    def __init__(self, h5parent, name, type_):
+    def __init__(self, h5file, parentblock, name, type_):
         id_ = util.create_id()
-        h5obj = h5parent.create_group(name)
-        super(Group, self).__init__(h5obj, id_, name, type_)
+        h5obj = parentblock._h5obj["groups"].create_group(name)
+        super(Group, self).__init__(h5file, parentblock, h5obj,
+                                    id_, name, type_)
 
     def _add_data_array_by_id(self):
         pass
