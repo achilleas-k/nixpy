@@ -12,10 +12,15 @@ from .entity import EntityWithSources
 
 class DataArray(EntityWithSources):
 
-    def __init__(self, file, block, name, type_, data, shape):
-        id_ = util.create_id()
-        h5obj = block._h5obj["data_arrays"].create_group(name)
-        super(DataArray, self).__init__(file, block, h5obj, id_, name, type_)
+    def __init__(self, h5obj):
+        super(DataArray, self).__init__(h5obj)
+        # TODO: Validate data containers
+
+    @classmethod
+    def _create_new(cls, parent, name, type_, data):
+        newentity = super(DataArray, cls)._create_new(parent, name, type_)
+        # TODO: Make data containers
+        return newentity
 
     def create_set_dimension(self):
         pass

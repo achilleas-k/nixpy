@@ -12,10 +12,15 @@ from . import util
 
 class Tag(EntityWithSources):
 
-    def __init__(self, file, block, name, type_, position):
-        id_ = util.create_id()
-        h5obj = block._h5obj["tags"].create_group(name)
-        super(Tag, self).__init__(file, block, h5obj, id_, name, type_)
+    def __init__(self, h5obj):
+        super(Tag, self).__init__(h5obj)
+        # TODO: Validate data containers
+
+    @classmethod
+    def _create_new(cls, parent, name, type_, position):
+        newentity = super(Tag, cls)._create_new(parent, name, type_)
+        # TODO: Make data containers
+        return newentity
 
     def _add_reference_by_id(self):
         pass
@@ -58,10 +63,3 @@ class Tag(EntityWithSources):
 
     def retrieve_feature_data(self):
         pass
-
-    def __str__(self):
-        pass
-
-    def __repr__(self):
-        pass
-

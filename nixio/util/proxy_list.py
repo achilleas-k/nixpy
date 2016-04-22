@@ -57,7 +57,6 @@ class ProxyList(object):
     def __delitem__(self, key):
         if hasattr(key, "id"):
             key = key.id
-
         elem = self.__getitem__(key)
         self.__deleter(elem.id)
 

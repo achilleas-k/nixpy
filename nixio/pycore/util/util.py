@@ -22,7 +22,7 @@ def sanitize_unit(unit):
 
 def is_uuid(id_):
     try:
-        UUID(id_)
+        UUID(str(id_))
         return True
     except ValueError:
         return False
@@ -43,6 +43,11 @@ def check_entity_name(name):
         raise ValueError("String provided for entity name is empty!")
     if not check_name(name):
         raise ValueError("String provided for entity name is invalid!")
+
+
+def check_entity_id(id_):
+    if not is_uuid(id_):
+        raise ValueError("String provided for id is not a valid UUID")
 
 
 def check_empty_str(string, field_name):
@@ -86,6 +91,8 @@ def create_h5props(cls, attributes):
                 self._h5obj.attrs[propname] = value
 
         def deleter(self):
+            # TODO: Allow deleting attributes?
+            # TODO: Do not allow deleting required attributes (name, type, id)
             del self._h5obj.attrs[propname]
 
         return property(fget=getter, fset=setter, fdel=deleter)
@@ -94,40 +101,47 @@ def create_h5props(cls, attributes):
         setattr(cls, attr, makeprop(attr))
 
 
-def create_container_methods(cls, childclass):
-    iddict = "_{}s_id".format(childclass)
-    # namedict = "_{}s_name".format(childclass)
-    h5cont = "_{}_group".format(childclass)
-    # objlist = "_{}s_list".format(childclass)
+def create_container_methods(cls, chcls, chclsname):
+    # TODO: Better exception handling and messages
 
-    def idgetter(self, id_):
-        return getattr(self, iddict).get(id_)
+    if chclsname == "block":
+        container = "data"
+    else:
+        container = chclsname + "s"
 
-    # def namegetter(self, name):
-    #     return getattr(self, namedict).get(name)
+    def id_or_name_getter(self, id_or_name):
+        if is_uuid(id_or_name):
+            for h5obj in self._h5obj[container].values():
+                if h5obj.attrs["id"] == id_or_name:
+                    break
+            else:
+                raise ValueError
+        else:
+            try:
+                h5obj = self._h5obj[container][id_or_name]
+            except Exception:
+                raise ValueError
+        return chcls(h5obj)
 
-    def posgetter(self, pos):
-        # return getattr(self, objlist)[pos]
-        return list(getattr(self, iddict).values())[pos]
+    def pos_getter(self, pos):
+        obj = list(self._h5obj[container].values())[pos]
+        return chcls(obj)
 
-    def adder(self, item):
-        getattr(self, iddict)[item.id] = item
-        # getattr(self, namedict)[item.name] = item
-        # getattr(self, objlist).append(item)
-
-    def deleter(self, id_):
-        name = getattr(self, iddict)[id_].name
-        del getattr(self, h5cont)[name]
-        del getattr(self, iddict)[id_]
-        # del getattr(self, namedict)[name]
+    def deleter(self, id_or_name):
+        if is_uuid(id_or_name):
+            name = id_or_name_getter(self, id_or_name).name
+        else:
+            name = id_or_name
+        try:
+            del self._h5obj[container][name]
+        except Exception:
+            raise ValueError
 
     def counter(self):
-        return len(getattr(self, h5cont))
+        return len(self._h5obj[container])
 
-    setattr(cls, "_get_{}_by_id".format(childclass), idgetter)
-    # setattr(cls, "_get_{}_by_name".format(childclass), namegetter)
-    setattr(cls, "_get_{}_by_pos".format(childclass), posgetter)
-    setattr(cls, "_add_{}".format(childclass), adder)
-    setattr(cls, "_delete_{}_by_id".format(childclass), deleter)
-    setattr(cls, "_{}_count".format(childclass), counter)
+    setattr(cls, "_get_{}_by_id".format(chclsname), id_or_name_getter)
+    setattr(cls, "_get_{}_by_pos".format(chclsname), pos_getter)
+    setattr(cls, "_delete_{}_by_id".format(chclsname), deleter)
+    setattr(cls, "_{}_count".format(chclsname), counter)
 

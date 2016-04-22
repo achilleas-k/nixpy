@@ -15,30 +15,28 @@ from . import Group, DataArray, MultiTag, Tag, Source
 
 class Block(EntityWithMetadata):
 
-    def __init__(self, file, h5parent, name, type_):
-        id_ = util.create_id()
-        h5obj = h5parent.create_group(name)
-        super(Block, self).__init__(file, h5obj, id_, name, type_)
-        self._init_container("data_array")
-        self._init_container("tag")
-        self._init_container("multi_tag")
-        self._init_container("group")
-        self._init_container("source")
+    def __init__(self, h5obj):
+        super(Block, self).__init__(h5obj)
+        # TODO: Validation for containers
 
-    def _init_container(self, childclass):
-        setattr(self, "_{}_group".format(childclass),
-                self._h5obj.create_group(childclass + "s"))
-        setattr(self, "_{}s_id".format(childclass), dict())
-        # setattr(self, "_{}s_name".format(childclass), dict())
-        # setattr(self, "_{}s_list".format(childclass), list())
+    @classmethod
+    def _create_new(cls, parent, name, type_):
+        newentity = super(Block, cls)._create_new(parent, name, type_)
+        # TODO: Create child containers
+        newentity._h5obj.create_group("groups")
+        newentity._h5obj.create_group("data_arrays")
+        newentity._h5obj.create_group("tags")
+        newentity._h5obj.create_group("multi_tags")
+        newentity._h5obj.create_group("sources")
+        return newentity
 
     # DataArray
     def _create_data_array(self, name, type_, data_type, shape):
         util.check_entity_name_and_type(name, type_)
-        if name in self._data_array_group:
+        data_arrays = self._h5obj["data_arrays"]
+        if name in data_arrays:
             raise exceptions.DuplicateName("create_data_array")
-        da = DataArray(self._file, self, name, type_, data_type, shape)
-        self._add_data_array(da)
+        da = DataArray._create_new(data_arrays, name, type_, data_type)
         return da
 
     # MultiTag
@@ -50,40 +48,39 @@ class Block(EntityWithMetadata):
         multi_tags = self._h5obj["multi_tags"]
         if name in multi_tags:
             raise exceptions.DuplicateName("create_multi_tag")
-        mtag = MultiTag(self._file, self, name, type_, positions)
-        self._add_multi_tag(mtag)
+        mtag = MultiTag._create_new(multi_tags, name, type_, positions)
         return mtag
 
     # Tag
     def create_tag(self, name, type_, position):
         util.check_entity_name_and_type(name, type_)
-        if name in self._tag_group:
+        tags = self._h5obj["tags"]
+        if name in tags:
             raise exceptions.DuplicateName("create_tag")
-        tag = Tag(self._file, self, name, type_, position)
-        self._add_tag(tag)
+        tag = Tag._create_new(tags, name, type_, position)
         return tag
 
     # Source
     def create_source(self, name, type_):
         util.check_entity_name_and_type(name, type_)
-        if name in self._source_group:
+        sources = self._h5obj["sources"]
+        if name in sources:
             raise exceptions.DuplicateName("create_source")
-        src = Source(self._file, self, name, type_)
-        self._add_source(src)
+        src = Source._create_new(sources, name, type_)
         return src
 
     # Group
     def create_group(self, name, type_):
         util.check_entity_name_and_type(name, type_)
-        if name in self._group_group:
+        groups = self._h5obj["groups"]
+        if name in groups:
             raise exceptions.DuplicateName("create_group")
-        grp = Group(self._file, self, name, type_)
-        self._add_group(grp)
+        grp = Group._create_new(groups, name, type_)
         return grp
 
 
-util.create_container_methods(Block, "data_array")
-util.create_container_methods(Block, "tag")
-util.create_container_methods(Block, "multi_tag")
-util.create_container_methods(Block, "group")
-util.create_container_methods(Block, "source")
+util.create_container_methods(Block, DataArray, "data_array")
+util.create_container_methods(Block, Tag, "tag")
+util.create_container_methods(Block, MultiTag, "multi_tag")
+util.create_container_methods(Block, Group, "group")
+util.create_container_methods(Block, Source, "source")

@@ -12,11 +12,15 @@ from . import util
 
 class Group(EntityWithSources):
 
-    def __init__(self, h5file, parentblock, name, type_):
-        id_ = util.create_id()
-        h5obj = parentblock._h5obj["groups"].create_group(name)
-        super(Group, self).__init__(h5file, parentblock, h5obj,
-                                    id_, name, type_)
+    def __init__(self, h5obj):
+        super(Group, self).__init__(h5obj)
+        # TODO: Validate link containers
+
+    @classmethod
+    def _create_new(cls, parent, name, type_):
+        newentity = super(Group, cls)._create_new(parent, name, type_)
+        # TODO: Make link containers
+        return newentity
 
     def _add_data_array_by_id(self):
         pass
@@ -70,10 +74,4 @@ class Group(EntityWithSources):
         pass
 
     def _delete_multi_tag_by_id(self):
-        pass
-
-    def __str__(self):
-        pass
-
-    def __repr__(self):
         pass

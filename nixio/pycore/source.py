@@ -13,28 +13,23 @@ from . import exceptions
 
 class Source(EntityWithMetadata):
 
-    def __init__(self, file, parent, name, type_):
-        id_ = util.create_id()
-        h5obj = parent._h5obj["sources"].create_group(name)
-        super(Source, self).__init__(file, h5obj, id_, name, type_)
-        self._source_group = self._h5obj.create_group("sources")
-        self._sources_id = dict()
-        # self._sources_name = dict()
-        # self._sources_list = list()
+    def __init__(self, h5obj):
+        super(Source, self).__init__(h5obj)
+        # TODO: Validate Source container
+
+    @classmethod
+    def _create_new(cls, parent, name, type_):
+        newentity = super(Source, cls)._create_new(parent, name, type_)
+        newentity._h5obj.create_group("sources")
+        return newentity
 
     # Source
     def create_source(self, name, type_):
         util.check_entity_name_and_type(name, type_)
-        if name in self._source_group:
+        sources = self._h5obj["sources"]
+        if name in sources:
             raise exceptions.DuplicateName("create_source")
-        src = Source(self._file, self, name, type_)
-        self._add_source(src)
+        src = Source._create_new(sources, name, type_)
         return src
 
-    def __str__(self):
-        pass
-
-    def __repr__(self):
-        pass
-
-util.create_container_methods(Source, "source")
+util.create_container_methods(Source, Source, "source")

@@ -11,11 +11,13 @@ from .entity import NamedEntity
 
 class Section(NamedEntity):
 
-    def __init__(self):
-        super(Section, self).__init__()
-        self.repository = None
-        self.mapping = None
-        self.link = None
+    def __init__(self, h5obj):
+        super(Section, self).__init__(h5obj)
+
+    @classmethod
+    def _create_new(cls, parent, name, type_):
+        newentity = super(Section, cls)._create_new(parent, name, type_)
+        return newentity
 
     def create_section(self):
         pass
@@ -54,10 +56,4 @@ class Section(NamedEntity):
         pass
 
     def inherited_properties(self):
-        pass
-
-    def __str__(self):
-        pass
-
-    def __repr__(self):
         pass

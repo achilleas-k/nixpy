@@ -12,10 +12,15 @@ from . import util
 
 class MultiTag(EntityWithSources):
 
-    def __init__(self, file, block, name, type_, positions):
-        id_ = util.create_id()
-        h5obj = block._h5obj["multi_tags"].create_group(name)
-        super(MultiTag, self).__init__(file, block, h5obj, id_, name, type_)
+    def __init__(self, h5obj):
+        super(MultiTag, self).__init__(h5obj)
+        # TODO: Validate data containers
+
+    @classmethod
+    def _create_new(cls, parent, name, type_, positions):
+        newentity = super(MultiTag, cls)._create_new(parent, name, type_)
+        # TODO: Make data containers
+        return newentity
 
     def _add_reference_by_id(self):
         pass
@@ -57,11 +62,5 @@ class MultiTag(EntityWithSources):
         pass
 
     def retrieve_feature_data(self):
-        pass
-
-    def __str__(self):
-        pass
-
-    def __repr__(self):
         pass
 
