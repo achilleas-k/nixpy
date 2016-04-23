@@ -68,8 +68,8 @@ def check_entity_input(entity, raise_exception=True):
     return False
 
 
-def nowstr():
-    return str(int(time()))
+def now():
+    return int(time())
 
 
 def create_h5props(cls, attributes, types=None):

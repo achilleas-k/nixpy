@@ -25,10 +25,10 @@ class File(object):
     def __init__(self, path, mode=FileMode.ReadWrite):
         self._h5file = h5py.File(name=path, mode=mode)
         self._h5obj = self._h5file  # convenience synonym
-        self.format = np.string_("nix")
-        self.version = [1, 0, 0]
-        self.created_at = util.nowstr()
-        self.updated_at = util.nowstr()
+        self.format = "nix"
+        self.version = (1, 0, 0)
+        self.created_at = util.now()
+        self.updated_at = util.now()
         self._root = self._h5file["/"]
         self._data = self._root.create_group("data")
 
@@ -36,11 +36,11 @@ class File(object):
     def open(cls, path, mode=FileMode.ReadWrite):
         return cls(path, mode)
 
-    def force_created_at(self):
-        pass
+    def force_created_at(self, t):
+        self.created_at = t
 
-    def force_updated_at(self):
-        pass
+    def force_updated_at(self, t):
+        self.updated_at = t
 
     def create_block(self, name, type_):
         util.check_entity_name_and_type(name, type_)
@@ -73,5 +73,6 @@ class File(object):
     def validate(self):
         pass
 
-util.create_h5props(File, ["version", "format", "created_at", "updated_at"])
+util.create_h5props(File, ["version", "format", "created_at", "updated_at"],
+                    [tuple, str, int, int])
 util.create_container_methods(File, Block, "block")
