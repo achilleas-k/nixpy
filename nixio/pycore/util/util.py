@@ -72,13 +72,21 @@ def nowstr():
     return str(int(time()))
 
 
-def create_h5props(cls, attributes):
+def create_h5props(cls, attributes, types=None):
 
-    def makeprop(propname):
+    def makeprop(propname, type_):
+
         def getter(self):
-            return self._h5obj.attrs.get(propname)
+            value = self._h5obj.attrs.get(propname)
+            if type_:
+                value = type_(value)
+            return value
 
         def setter(self, value):
+            if type_ and not isinstance(value, type_):
+                raise TypeError("Attribute {} requires type {} but {} "
+                                "was provided".format(propname, type_,
+                                                      type(value)))
             if propname in ("name", "id") and propname in self._h5obj.attrs:
                 raise AttributeError("can't set attribute")
             if value is None:
@@ -97,8 +105,10 @@ def create_h5props(cls, attributes):
 
         return property(fget=getter, fset=setter, fdel=deleter)
 
-    for attr in attributes:
-        setattr(cls, attr, makeprop(attr))
+    if types is None:
+        types = [None]*len(attributes)
+    for attr, type_ in zip(attributes, types):
+        setattr(cls, attr, makeprop(attr, type_))
 
 
 def create_container_methods(cls, chcls, chclsname):
