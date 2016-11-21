@@ -299,6 +299,12 @@ class DataArrayTestBase(unittest.TestCase):
         assert(da.dtype == np.dtype('V1'))
         assert(np.array_equal(void_data, da[:]))
 
+        # str_data = "this is a data string"
+        # da = self.block.create_data_array("dtype_string", "s", data=str_data)
+        # print(da.dtype.kind)
+        # assert(da.dtype.kind in "SU")
+        # assert(str_data == da)
+
     def test_data_array_dimensions(self):
         assert(len(self.array.dimensions) == 0)
 

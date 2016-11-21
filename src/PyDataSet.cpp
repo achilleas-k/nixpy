@@ -75,6 +75,7 @@ static nix::DataType pyDtypeToNixDtype(const PyArray_Descr *dtype)
         break;
 
     case 'S':
+    case 'U':
         return nix::DataType::String;
         break;
 

@@ -200,7 +200,7 @@ class DataSetMixin(object):
     @property
     def dtype(self):
         """
-        :type: :class:`numpy.dtype` object holding type infromation about
+        :type: :class:`numpy.dtype` object holding type information about
                the data stored in the DataSet.
         """
         return np.dtype(self._get_dtype())

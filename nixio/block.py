@@ -99,6 +99,8 @@ class BlockMixin(object):
             data = np.ascontiguousarray(data)
             if dtype is None:
                 dtype = data.dtype
+                if dtype.kind in "SU":
+                    dtype = DataType.String
             if shape is not None:
                 if shape != data.shape:
                     raise ValueError("Shape must equal data.shape")

@@ -150,16 +150,6 @@ class DataArray(EntityWithSources, DataSet, DataArrayMixin):
             raise TypeError("Invalid Dimension object in file.")
 
     @property
-    def dtype(self):
-        """
-        The data type of the data stored in the DataArray.
-        This is a read only property.
-
-        :return: DataType
-        """
-        return self._h5group.group["data"].dtype
-
-    @property
     def polynom_coefficients(self):
         """
         The polynomial coefficients for the calibration. By default this is
