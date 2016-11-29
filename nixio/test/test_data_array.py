@@ -5,7 +5,6 @@
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted under the terms of the BSD License. See
 # LICENSE file in the root of the Project.
-
 from __future__ import (absolute_import, division, print_function)
 import os
 import sys
@@ -299,11 +298,11 @@ class DataArrayTestBase(unittest.TestCase):
         assert(da.dtype == np.dtype('V1'))
         assert(np.array_equal(void_data, da[:]))
 
-        # str_data = "this is a data string"
-        # da = self.block.create_data_array("dtype_string", "s", data=str_data)
-        # print(da.dtype.kind)
-        # assert(da.dtype.kind in "SU")
-        # assert(str_data == da)
+        str_data = ["this is a data string"]
+        da = self.block.create_data_array("dtype_string", "s", data=str_data)
+        assert(da.dtype == nix.DataType.String)
+        assert(len(str_data) == len(da))
+        assert(str_data == da[0])
 
     def test_data_array_dimensions(self):
         assert(len(self.array.dimensions) == 0)

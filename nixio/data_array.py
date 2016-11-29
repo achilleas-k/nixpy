@@ -15,6 +15,7 @@ from numbers import Integral
 from nixio.dimension_type import DimensionType
 
 import numpy as np
+from .pycore.util import vlen_str_dtype
 
 
 class DataArrayMixin(object):
@@ -131,7 +132,11 @@ class DataSetMixin(object):
         if any(o+c > s for o, c, s in zip(offset, count, self.shape)):
             raise IndexError("index is out of bounds")
 
-        raw = np.empty(shape, dtype=self.dtype)
+        if self.dtype.kind == "S":
+            dt = vlen_str_dtype
+        else:
+            dt = self.dtype
+        raw = np.empty(shape, dtype=dt)
 
         if hasattr(self, "polynom_coefficients") and self.polynom_coefficients:
             # if there are coefficients, convert the dtype of the returned data

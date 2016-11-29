@@ -22,9 +22,9 @@ class H5DataSet(object):
         if (dtype is None) or (shape is None):
             self.dataset = self._parent[name]
         else:
-            maxshape = (None,) * len(shape)
             if dtype == DataType.String:
                 dtype = util.vlen_str_dtype
+            maxshape = (None,) * len(shape)
             comprargs = dict()
             if compression:
                 comprargs = {"compression": "gzip", "compression_opts": 6}
@@ -87,7 +87,10 @@ class H5DataSet(object):
 
     @property
     def dtype(self):
-        return self.dataset.dtype
+        dt = self.dataset.dtype
+        if dt.metadata and dt.metadata["vlen"] is str:
+            return DataType.String
+        return dt
 
     def __str__(self):
         return "<H5DataSet object: {}>".format(self.dataset.name)

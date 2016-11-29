@@ -6,7 +6,6 @@
 # modification, are permitted under the terms of the BSD License. See
 # LICENSE file in the root of the Project.
 from numbers import Number
-import numpy as np
 from enum import Enum
 
 from .entity_with_sources import EntityWithSources
@@ -36,21 +35,20 @@ class DataArray(EntityWithSources, DataSet, DataArrayMixin):
                     compression):
         newentity = super(DataArray, cls)._create_new(nixparent, h5parent,
                                                       name, type_)
-        newentity._h5group.create_dataset("data", shape, data_type,
-                                          compression)
+        if data_type == DataType.String:
+            data_type = util.vlen_str_dtype
+        newentity._h5group.create_dataset("data", shape, data_type)
         return newentity
 
     def _read_data(self, data, count, offset):
         coeff = self.polynom_coefficients
         origin = self.expansion_origin
+        super(DataArray, self)._read_data(data, count, offset)
         if len(coeff) or origin:
             if not origin:
                 origin = 0.0
 
-            super(DataArray, self)._read_data(data, count, offset)
             util.apply_polynomial(coeff, origin, data)
-        else:
-            super(DataArray, self)._read_data(data, count, offset)
 
     def append_set_dimension(self):
         """
