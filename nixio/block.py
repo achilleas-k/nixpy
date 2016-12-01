@@ -11,6 +11,7 @@ from __future__ import (absolute_import, division, print_function)
 from .util import find as finders
 from .util.proxy_list import ProxyList
 from .compression import Compression
+from .pycore.util import vlen_str_dtype
 import numpy as np
 
 try:
@@ -100,7 +101,8 @@ class BlockMixin(object):
             if dtype is None:
                 dtype = data.dtype
                 if dtype.kind in "SU":
-                    dtype = DataType.String
+                    dtype = vlen_str_dtype
+                    data = np.ascontiguousarray(data, dtype=dtype)
             if shape is not None:
                 if shape != data.shape:
                     raise ValueError("Shape must equal data.shape")

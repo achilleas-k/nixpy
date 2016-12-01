@@ -79,6 +79,11 @@ static nix::DataType pyDtypeToNixDtype(const PyArray_Descr *dtype)
         return nix::DataType::String;
         break;
 
+    case 'O':
+        // TODO: Check if the underlying type is a string
+        return nix::DataType::String;
+        break;
+
     case 'b':
         return nix::DataType::Bool;
         break;
@@ -104,6 +109,7 @@ static std::string nixDtypeToPyDtypeStr(nix::DataType nix_dtype)
         case nix::DataType::Float:  return "<f4";
         case nix::DataType::Double: return "<f8";
         case nix::DataType::Opaque: return "|V1";
+        case nix::DataType::String: return "O";
         default:                    return "";
     }
 }

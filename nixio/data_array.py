@@ -16,6 +16,7 @@ from nixio.dimension_type import DimensionType
 
 import numpy as np
 from .pycore.util import vlen_str_dtype
+from .value import DataType
 
 
 class DataArrayMixin(object):
@@ -132,10 +133,9 @@ class DataSetMixin(object):
         if any(o+c > s for o, c, s in zip(offset, count, self.shape)):
             raise IndexError("index is out of bounds")
 
-        if self.dtype.kind == "S":
+        dt = self.dtype
+        if dt == DataType.String:
             dt = vlen_str_dtype
-        else:
-            dt = self.dtype
         raw = np.empty(shape, dtype=dt)
 
         if hasattr(self, "polynom_coefficients") and self.polynom_coefficients:
@@ -208,7 +208,12 @@ class DataSetMixin(object):
         :type: :class:`numpy.dtype` object holding type information about
                the data stored in the DataSet.
         """
-        return np.dtype(self._get_dtype())
+        dt = np.dtype(self._get_dtype())
+        if dt.kind == "O":
+            # return vlen_str_dtype
+            return DataType.String
+
+        return dt
 
     def write_direct(self, data):
         """
