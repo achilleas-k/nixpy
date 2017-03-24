@@ -54,6 +54,10 @@ class Group(EntityWithSources, GroupMixin):
         data_arrays = self._h5group.open_group("data_arrays")
         data_arrays.create_link(target, target.id)
 
+    def _add_data_array_obj(self, da):
+        data_arrays = self._h5group.open_group("data_arrays")
+        data_arrays.create_link(da, da.id)
+
     def _has_data_array_by_id(self, id_or_name):
         data_arrays = self._h5group.open_group("data_arrays")
         return data_arrays.has_by_id(id_or_name)
@@ -85,6 +89,10 @@ class Group(EntityWithSources, GroupMixin):
         multi_tags = self._h5group.open_group("multi_tags")
         multi_tags.create_link(target, target.id)
 
+    def _add_multi_tag_obj(self, mtag):
+        multi_tags = self._h5group.open_group("multi_tags")
+        multi_tags.create_link(mtag, mtag.id)
+
     def _has_multi_tag_by_id(self, id_or_name):
         multi_tags = self._h5group.open_group("multi_tags")
         return multi_tags.has_by_id(id_or_name)
@@ -115,6 +123,10 @@ class Group(EntityWithSources, GroupMixin):
         target = self._parent.tags[id_or_name]
         tags = self._h5group.open_group("tags")
         tags.create_link(target, target.id)
+
+    def _add_tag_obj(self, tag):
+        tags = self._h5group.open_group("tags")
+        tags.create_link(tag, tag.id)
 
     def _has_tag_by_id(self, id_or_name):
         tags = self._h5group.open_group("tags")
