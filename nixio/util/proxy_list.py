@@ -38,7 +38,7 @@ class ProxyList(object):
                 pass
 
             if val is None:
-                raise KeyError("The given key does not exist: " + key)
+                raise KeyError("The given key does not exist: {}".format(key))
 
             return val
         elif isinstance(key, int):
@@ -48,7 +48,7 @@ class ProxyList(object):
                 key = count + key
 
             if key >= count or key < 0:
-                raise KeyError("Index out of bounds: {}".format(key))
+                raise KeyError("Index out of bounds: {}".format(str(key)))
 
             return self.__index_getter(key)
         else:
