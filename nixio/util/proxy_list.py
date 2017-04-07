@@ -48,7 +48,7 @@ class ProxyList(object):
                 key = count + key
 
             if key >= count or key < 0:
-                raise KeyError("Index out of bounds: {}".format(str(key)))
+                raise KeyError("Index out of bounds: {}".format(key))
 
             return self.__index_getter(key)
         else:
