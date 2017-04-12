@@ -7,18 +7,14 @@
 # LICENSE file in the root of the Project.
 
 from __future__ import (absolute_import, division, print_function)
-import os
-
-import unittest
-
 import nixio as nix
+import unittest
 
 
 class TestFeature(unittest.TestCase):
-    testfilename = "featuretest.h5"
 
     def setUp(self):
-        self.file = nix.File.open(self.testfilename, nix.FileMode.Overwrite)
+        self.file = nix.File.open("unittest.h5", nix.FileMode.Overwrite)
         self.block = self.file.create_block("test block", "recordingsession")
 
         self.group = self.block.create_group("test group", "feature test")
@@ -75,10 +71,3 @@ class TestFeature(unittest.TestCase):
                                                     nix.DataType.Float, (0, ))
         self.feature_1.data = new_data_ref
         assert(self.feature_1.data == new_data_ref)
-
-    def test_feature_on_group(self):
-        grouptag = self.block.create_tag("I am tag", "grouptest", [0])
-        self.group.tags.append(grouptag)
-
-        grouptag = self.group.tags[-1]
-        grouptag.create_feature(self.movie1, nix.LinkType.Tagged)

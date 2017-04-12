@@ -11,7 +11,7 @@ import nixio as nix
 import unittest
 
 
-class PropertyTestBase(unittest.TestCase):
+class _TestProperty(unittest.TestCase):
 
     def setUp(self):
         self.file = nix.File.open("unittest.h5", nix.FileMode.Overwrite)

@@ -7,21 +7,17 @@
 # LICENSE file in the root of the Project.
 
 from __future__ import (absolute_import, division, print_function)
-import os
-
 import nixio as nix
 import unittest
 import h5py
-import nixio.file as filepy
-from nixio.exceptions.exceptions import InvalidFile
+import nixio.pycore.file as filepy
+from nixio.pycore.exceptions.exceptions import InvalidFile
 
 
 class FileTest(unittest.TestCase):
 
-    testfilename = "filetest.h5"
-
     def setUp(self):
-        self.file = nix.File.open(self.testfilename, nix.FileMode.Overwrite)
+        self.file = nix.File.open("unittest.h5", nix.FileMode.Overwrite)
 
     def tearDown(self):
         self.file.close()
@@ -116,24 +112,14 @@ class FileTest(unittest.TestCase):
             danames.append(name)
         self.file.close()
 
-        self.file = nix.File.open(self.testfilename, nix.FileMode.ReadOnly)
-
-        for idx in range(len(self.file.blocks)):
-            self.assertEqual(blknames[idx], self.file.blocks[idx].name)
-
-        datablock = self.file.blocks[datablockname]
-        for idx in range(len(datablock.data_arrays)):
-            self.assertEqual(danames[idx], datablock.data_arrays[idx].name)
-
-
 class FileVerTestPy(unittest.TestCase):
 
-    testfilename = "versiontest.h5"
+    filename = "versiontest.h5"
     filever = filepy.HDF_FF_VERSION
     fformat = filepy.FILE_FORMAT
 
     def try_open(self, mode):
-        f = nix.File.open(self.testfilename, mode)
+        f = nix.File.open(self.filename, mode)
         f.close()
 
     def set_header(self, fformat=None, version=None):

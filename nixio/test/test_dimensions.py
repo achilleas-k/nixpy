@@ -14,7 +14,6 @@ import numpy as np
 
 import nixio as nix
 
-
 test_range = tuple([float(i) for i in range(10)])
 test_sampl = 0.1
 test_label = "test label"
@@ -22,10 +21,9 @@ test_labels = tuple([str(i) + "_label" for i in range(10)])
 
 
 class TestDimensions(unittest.TestCase):
-    testfilename = "dimtest.h5"
 
     def setUp(self):
-        self.file = nix.File.open(self.testfilename, nix.FileMode.Overwrite)
+        self.file = nix.File.open("unittest.h5", nix.FileMode.Overwrite)
         self.block = self.file.create_block("test block", "recordingsession")
         self.array = self.block.create_data_array("test array", "signal",
                                                   nix.DataType.Float, (0, ))
@@ -123,14 +121,3 @@ class TestDimensions(unittest.TestCase):
         with self.assertRaises(IndexError):
             self.range_dim.axis(10, 2)
             self.range_dim.axis(100)
-
-    def test_alias_dimension(self):
-        da = self.block.create_data_array("alias da", "dimticks",
-                                          data=np.random.random(10))
-        da.label = "alias dimension label"
-        da.unit = "F"
-        da.append_alias_range_dimension()
-        assert(len(da.dimensions) == 1)
-        assert(da.dimensions[0].label == da.label)
-        assert(da.dimensions[0].unit == da.unit)
-        assert(np.all(da.dimensions[0].ticks == da[:]))

@@ -11,7 +11,7 @@ import nixio as nix
 import unittest
 
 
-class SourceTestBase(unittest.TestCase):
+class _TestSource(unittest.TestCase):
 
     def setUp(self):
         self.file = nix.File.open("unittest.h5", nix.FileMode.Overwrite)
@@ -140,16 +140,3 @@ class SourceTestBase(unittest.TestCase):
         self.assertEqual(len(self.source.referring_multi_tags), 1)
         self.assertEqual(len(self.other.referring_multi_tags), 0)
         self.assertEqual(self.source.referring_multi_tags[0].id, mtag.id)
-
-    def test_deep_linking(self):
-        lvl2 = self.third.create_source("lvl2", "source-test")
-        lvl3 = lvl2.create_source("lvl3", "source-test")
-
-        group = self.block.create_group("group", "source-test")
-        group.sources.append(lvl3)
-
-        self.assertEqual(lvl3._parent, lvl2)
-        self.assertEqual(lvl2.sources["lvl3"], lvl3)
-        self.assertEqual(lvl2.sources["lvl3"]._parent, lvl3._parent)
-        # TODO: Uncomment once fixed
-        # self.assertEqual(group.sources["lvl3"]._parent, lvl3._parent)
