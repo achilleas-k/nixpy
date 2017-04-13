@@ -9,8 +9,8 @@ from __future__ import (absolute_import, division, print_function)
 
 from .entity_with_metadata import EntityWithMetadata
 from .source import Source
-from .container import LinkContainer
-from . import util
+
+from .pycore import util
 
 
 class SourceLinkContainer(LinkContainer):
@@ -36,9 +36,12 @@ class SourceLinkContainer(LinkContainer):
 
 class EntityWithSources(EntityWithMetadata):
 
+class EntityWithSources(EntityWithMetadata):
+
+    sources = property(_get_sources, None, None, _sources_doc)
+
     def __init__(self, nixparent, h5group):
         super(EntityWithSources, self).__init__(nixparent, h5group)
-        self._sources = None
 
     @classmethod
     def _create_new(cls, nixparent, h5parent, name, type_):
@@ -47,16 +50,51 @@ class EntityWithSources(EntityWithMetadata):
         )
         return newentity
 
-    @property
-    def sources(self):
-        """
-        A property containing all Sources referenced by the group. Sources
-        can be obtained by index or their id. Sources can be removed from the
-        list, but removing a referenced Source will not remove it from the
-        file. New Sources can be added using the append method of the list.
-        This is a read only attribute.
-        """
-        if self._sources is None:
-            self._sources = SourceLinkContainer("sources", self, Source,
-                                                self._parent.sources)
-        return self._sources
+    # Source
+    def _get_source_by_id(self, id_or_name):
+        sources = self._h5group.open_group("sources")
+        if util.is_uuid(id_or_name):
+            id_ = id_or_name
+        else:
+            for grp in sources:
+                if grp.get_attr("name") == id_or_name:
+                    id_ = grp.get_attr("entity_id")
+                    break
+            else:
+                raise ValueError("No Source with name {} found {}.sources"
+                                 .format(id_or_name, self.name))
+        return Source(self, sources.get_by_name(id_))
+
+    def _get_source_by_pos(self, pos):
+        sources = self._h5group.open_group("sources")
+        return Source(self, sources.get_by_pos(pos))
+
+    def _remove_source_by_id(self, id_):
+        sources = self._h5group.open_group("sources")
+        sources.delete(id_)
+
+    def _source_count(self):
+        sources = self._h5group.open_group("sources")
+        return len(sources)
+
+    def _add_source_by_id(self, id_):
+        parblock = self._parent
+        target = parblock._h5group.find_children(
+            filtr=lambda x: x.get_attr("entity_id") == id_
+        )
+        cls = type(self).__name__
+        if not target:
+            raise RuntimeError("{}._add_source_by_id: "
+                               "Source not found!".format(cls))
+        if len(target) > 1:
+            raise RuntimeError("{}._add_source_by_id: "
+                               "Invalid data found in NIX file. "
+                               "Multiple Sources found with the same ID."
+                               .format(cls))
+        target = Source(parblock, target[0])
+        sources = self._h5group.open_group("sources")
+        sources.create_link(target, target.id)
+
+    def _has_source_by_id(self, id_or_name):
+        sources = self._h5group.open_group("sources")
+        sources.has_by_id(id_or_name)
