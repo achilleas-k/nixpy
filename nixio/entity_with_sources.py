@@ -10,8 +10,9 @@ from __future__ import (absolute_import, division, print_function)
 from .entity_with_metadata import EntityWithMetadata
 from .source import Source
 
-from .pycore import util
+from . import util
 
+from .util.proxy_list import RefProxyList
 
 class SourceLinkContainer(LinkContainer):
 
