@@ -11,14 +11,14 @@ import numpy as np
 
 from .value import DataType
 from .data_array import DataArray
-from .entity_with_sources import EntityWithSources
-from .data_view import DataView
-from .feature import Feature
-from .exceptions import (OutOfBounds, IncompatibleDimensions,
-                         UninitializedEntity, InvalidUnit)
+from .pycore.entity_with_sources import EntityWithSources
+from .pycore.data_view import DataView
+from .pycore.feature import Feature
+from .pycore.exceptions import (OutOfBounds, IncompatibleDimensions,
+                                UninitializedEntity, InvalidUnit)
 from .dimension_type import DimensionType
 from .link_type import LinkType
-from . import util
+from .pycore import util
 
 from nixio.util.proxy_list import ProxyList, RefProxyList
 
