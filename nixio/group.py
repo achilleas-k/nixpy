@@ -7,12 +7,13 @@
 # LICENSE file in the root of the Project.
 from __future__ import (absolute_import, division, print_function)
 
-from .entity_with_sources import EntityWithSources
-from .data_array import DataArray
-from .tag import Tag
-from .multi_tag import MultiTag
-from .container import LinkContainer
+from .pycore.entity_with_sources import EntityWithSources
+from .pycore.data_array import DataArray
+from .pycore.tag import Tag
+from .pycore.multi_tag import MultiTag
 
+from .pycore import util
+from .util.proxy_list import RefProxyList
 
 class Group(EntityWithSources):
 
@@ -22,11 +23,137 @@ class Group(EntityWithSources):
         self._tags = None
         self._multi_tags = None
 
+    def __init__(self, obj):
+        super(DataArrayProxyList, self).__init__(
+            obj, "_data_array_count", "_get_data_array_by_id",
+            "_get_data_array_by_pos", "_delete_data_array_by_id",
+            "_add_data_array_by_id"
+        )
+
+
+class TagProxyList(RefProxyList):
+
+    def __init__(self, obj):
+        super(TagProxyList, self).__init__(
+            obj, "_tag_count", "_get_tag_by_id",
+            "_get_tag_by_pos", "_delete_tag_by_id",
+            "_add_tag_by_id"
+        )
+
+
+class MultiTagProxyList(RefProxyList):
+
+    def __init__(self, obj):
+        super(MultiTagProxyList, self).__init__(
+            obj, "_multi_tag_count", "_get_multi_tag_by_id",
+            "_get_multi_tag_by_pos", "_delete_multi_tag_by_id",
+            "_add_multi_tag_by_id"
+        )
+
+
+class Group(EntityWithSources):
+
+    def __init__(self, nixparent, h5group):
+        super(Group, self).__init__(nixparent, h5group)
+
     @classmethod
     def _create_new(cls, nixparent, h5parent, name, type_):
         newentity = super(Group, cls)._create_new(nixparent, h5parent,
                                                   name, type_)
         return newentity
+
+    # DataArray
+    def _get_data_array_by_id(self, id_or_name):
+        data_arrays = self._h5group.open_group("data_arrays")
+        if not util.is_uuid(id_or_name):
+            id_or_name = self._parent.data_arrays[id_or_name].id
+        # Using get_by_name - linked entries use id as name in backend
+        return DataArray(self._parent, data_arrays.get_by_name(id_or_name))
+
+    def _get_data_array_by_pos(self, pos):
+        data_arrays = self._h5group.open_group("data_arrays")
+        return DataArray(self._parent, data_arrays.get_by_pos(pos))
+
+    def _delete_data_array_by_id(self, id_):
+        data_arrays = self._h5group.open_group("data_arrays")
+        data_arrays.delete(id_)
+
+    def _data_array_count(self):
+        return len(self._h5group.open_group("data_arrays"))
+
+    def _add_data_array_by_id(self, id_or_name):
+        if id_or_name not in self._parent.data_arrays:
+            raise RuntimeError("Group._add_data_array_by_id: "
+                               "DataArray not found in Block!")
+        target = self._parent.data_arrays[id_or_name]
+        data_arrays = self._h5group.open_group("data_arrays")
+        data_arrays.create_link(target, target.id)
+
+    def _has_data_array_by_id(self, id_or_name):
+        data_arrays = self._h5group.open_group("data_arrays")
+        return data_arrays.has_by_id(id_or_name)
+
+    # MultiTag
+    def _get_multi_tag_by_id(self, id_or_name):
+        multi_tags = self._h5group.open_group("multi_tags")
+        if not util.is_uuid(id_or_name):
+            id_or_name = self._parent.multi_tags[id_or_name].id
+        # Using get_by_name - linked entries use id as name in backend
+        return MultiTag(self._parent, multi_tags.get_by_name(id_or_name))
+
+    def _get_multi_tag_by_pos(self, pos):
+        multi_tags = self._h5group.open_group("multi_tags")
+        return MultiTag(self._parent, multi_tags.get_by_pos(pos))
+
+    def _delete_multi_tag_by_id(self, id_):
+        multi_tags = self._h5group.open_group("multi_tags")
+        multi_tags.delete(id_)
+
+    def _multi_tag_count(self):
+        return len(self._h5group.open_group("multi_tags"))
+
+    def _add_multi_tag_by_id(self, id_or_name):
+        if id_or_name not in self._parent.multi_tags:
+            raise RuntimeError("Group._add_multi_tag_by_id: "
+                               "MultiTag not found in Block!")
+        target = self._parent.multi_tags[id_or_name]
+        multi_tags = self._h5group.open_group("multi_tags")
+        multi_tags.create_link(target, target.id)
+
+    def _has_multi_tag_by_id(self, id_or_name):
+        multi_tags = self._h5group.open_group("multi_tags")
+        return multi_tags.has_by_id(id_or_name)
+
+    # Tag
+    def _get_tag_by_id(self, id_or_name):
+        tags = self._h5group.open_group("tags")
+        if not util.is_uuid(id_or_name):
+            id_or_name = self._parent.tags[id_or_name].id
+        # Using get_by_name - linked entries use id as name in backend
+        return Tag(self._parent, tags.get_by_name(id_or_name))
+
+    def _get_tag_by_pos(self, pos):
+        tags = self._h5group.open_group("tags")
+        return Tag(self._parent, tags.get_by_pos(pos))
+
+    def _delete_tag_by_id(self, id_):
+        tags = self._h5group.open_group("tags")
+        tags.delete(id_)
+
+    def _tag_count(self):
+        return len(self._h5group.open_group("tags"))
+
+    def _add_tag_by_id(self, id_or_name):
+        if id_or_name not in self._parent.tags:
+            raise RuntimeError("Group._add_tag_by_id: "
+                               "Tag not found in Block!")
+        target = self._parent.tags[id_or_name]
+        tags = self._h5group.open_group("tags")
+        tags.create_link(target, target.id)
+
+    def _has_tag_by_id(self, id_or_name):
+        tags = self._h5group.open_group("tags")
+        return tags.has_by_id(id_or_name)
 
     @property
     def data_arrays(self):
@@ -69,3 +196,4 @@ class Group(EntityWithSources):
             self._multi_tags = LinkContainer("multi_tags", self, MultiTag,
                                              self._parent.multi_tags)
         return self._multi_tags
+
