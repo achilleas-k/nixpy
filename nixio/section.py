@@ -21,14 +21,6 @@ from .value import Value
 from . import util
 from . import exceptions
 
-from operator import attrgetter
-
-    def __init__(self, obj):
-        super(SectionProxyList, self).__init__(obj, "_section_count",
-                                               "_get_section_by_id",
-                                               "_get_section_by_pos",
-                                               "_delete_section_by_id")
-
 
 # NOTE: Temporary duplicate
 class SectionProxyList(ProxyList):
@@ -175,7 +167,7 @@ class Section(NamedEntity):
         properties = self._h5group.open_group("properties")
         try:
             p = Property(self, properties.get_by_name(name))
-        except KeyError:
+        except ValueError:
             p = None
         return p
 
