@@ -11,9 +11,10 @@ from .entity_with_sources import EntityWithSources
 from .data_array import DataArray
 from .tag import Tag
 from .multi_tag import MultiTag
+from .container import LinkContainer
 
 from . import util
-from .util.proxy_list import RefProxyList
+
 
 class Group(EntityWithSources):
 
@@ -22,39 +23,6 @@ class Group(EntityWithSources):
         self._data_arrays = None
         self._tags = None
         self._multi_tags = None
-
-    def __init__(self, obj):
-        super(DataArrayProxyList, self).__init__(
-            obj, "_data_array_count", "_get_data_array_by_id",
-            "_get_data_array_by_pos", "_delete_data_array_by_id",
-            "_add_data_array_by_id"
-        )
-
-
-class TagProxyList(RefProxyList):
-
-    def __init__(self, obj):
-        super(TagProxyList, self).__init__(
-            obj, "_tag_count", "_get_tag_by_id",
-            "_get_tag_by_pos", "_delete_tag_by_id",
-            "_add_tag_by_id"
-        )
-
-
-class MultiTagProxyList(RefProxyList):
-
-    def __init__(self, obj):
-        super(MultiTagProxyList, self).__init__(
-            obj, "_multi_tag_count", "_get_multi_tag_by_id",
-            "_get_multi_tag_by_pos", "_delete_multi_tag_by_id",
-            "_add_multi_tag_by_id"
-        )
-
-
-class Group(EntityWithSources):
-
-    def __init__(self, nixparent, h5group):
-        super(Group, self).__init__(nixparent, h5group)
 
     @classmethod
     def _create_new(cls, nixparent, h5parent, name, type_):
@@ -166,7 +134,8 @@ class Group(EntityWithSources):
         This is a read only attribute.
         """
         if self._data_arrays is None:
-            self._data_arrays = LinkContainer("data_arrays", self, DataArray,
+            self._data_arrays = LinkContainer("data_arrays", self._h5group,
+                                              DataArray,
                                               self._parent.data_arrays)
         return self._data_arrays
 
@@ -180,7 +149,8 @@ class Group(EntityWithSources):
         This is a read only attribute.
         """
         if self._tags is None:
-            self._tags = LinkContainer("tags", self, Tag, self._parent.tags)
+            self._tags = LinkContainer("tags", self._h5group, Tag,
+                                       self._parent.tags)
         return self._tags
 
     @property
@@ -193,7 +163,6 @@ class Group(EntityWithSources):
         This is a read only attribute.
         """
         if self._multi_tags is None:
-            self._multi_tags = LinkContainer("multi_tags", self, MultiTag,
-                                             self._parent.multi_tags)
+            self._multi_tags = LinkContainer("multi_tags", self._h5group,
+                                             MultiTag, self._parent.multi_tags)
         return self._multi_tags
-
