@@ -274,7 +274,7 @@ class Block(EntityWithMetadata):
         This is a read only attribute.
         """
         if self._sources is None:
-            self._sources = Container("sources", self._h5group, Source)
+            self._sources = Container("sources", self, Source)
         return self._sources
 
     @property
@@ -286,7 +286,7 @@ class Block(EntityWithMetadata):
         This is a read only attribute.
         """
         if self._multi_tags is None:
-            self._multi_tags = Container("multi_tags", self._h5group, MultiTag)
+            self._multi_tags = Container("multi_tags", self, MultiTag)
         return self._multi_tags
 
     @property
@@ -298,7 +298,7 @@ class Block(EntityWithMetadata):
         This is a read only attribute.
         """
         if self._tags is None:
-            self._tags = Container("tags", self._h5group, Tag)
+            self._tags = Container("tags", self, Tag)
         return self._tags
 
     @property
@@ -311,8 +311,7 @@ class Block(EntityWithMetadata):
         This is a read only attribute.
         """
         if self._data_arrays is None:
-            self._data_arrays = Container("data_arrays", self._h5group,
-                                          DataArray)
+            self._data_arrays = Container("data_arrays", self, DataArray)
         return self._data_arrays
 
     @property
@@ -324,8 +323,7 @@ class Block(EntityWithMetadata):
         This is a read only attribute.
         """
         if self._groups is None:
-            self._groups = Container("groups", self._h5group,
-                                     Group)
+            self._groups = Container("groups", self, Group)
         return self._groups
 
     def __eq__(self, other):
