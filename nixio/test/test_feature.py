@@ -71,3 +71,10 @@ class TestFeature(unittest.TestCase):
                                                     nix.DataType.Float, (0, ))
         self.feature_1.data = new_data_ref
         assert(self.feature_1.data == new_data_ref)
+
+    def test_feature_on_group(self):
+        grouptag = self.block.create_tag("I am tag", "grouptest", [0])
+        self.group.tags.append(grouptag)
+
+        grouptag = self.group.tags[-1]
+        grouptag.create_feature(self.movie1, nix.LinkType.Tagged)
