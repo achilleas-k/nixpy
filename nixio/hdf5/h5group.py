@@ -182,14 +182,18 @@ class H5Group(object):
         if self.group and name in self.group:
             return self.create_from_h5obj(self.group[name])
         else:
-            raise KeyError("Item not found '{}'".format(name))
+            raise KeyError("No item with name {} found in {}".format(
+                name, self.group.name
+            ))
 
     def get_by_id(self, id_):
         if self.group:
             for item in self:
                 if item.get_attr("entity_id") == id_:
                     return item
-        raise KeyError("Item not found '{}'".format(id_))
+        raise KeyError("No item with ID {} found in {}".format(
+            id_, self.name
+        ))
 
     def get_by_pos(self, pos):
         if not self.group:
