@@ -340,4 +340,6 @@ class DataSetMixin(object):
                        else None, index, count)
         shape = list(filter(lambda x: x is not None, squeezed))
 
+        if not len(shape):
+            shape = [1]
         return count, offset, shape
