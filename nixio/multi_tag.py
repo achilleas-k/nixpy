@@ -6,6 +6,7 @@
 # modification, are permitted under the terms of the BSD License. See
 # LICENSE file in the root of the Project.
 from __future__ import (absolute_import, division, print_function)
+import numpy as np
 
 from .tag import BaseTag
 from .data_array import DataArray
@@ -66,6 +67,11 @@ class MultiTag(BaseTag):
             del self._h5group["extents"]
         else:
             self._h5group.create_link(da, "extents")
+
+    def _get_slice(self, data, index):
+        offset, count = self._get_offset_and_count(data, index)
+        sl = tuple(slice(o, o+c) for o, c in zip(offset, count))
+        return sl
 
     def _get_offset_and_count(self, data, index):
         offsets = []
@@ -158,7 +164,8 @@ class MultiTag(BaseTag):
         if not self._position_and_extent_in_data(ref, offset, count):
             raise OutOfBounds("References data slice out of the extent of the "
                               "DataArray!")
-        return DataView(ref, count, offset)
+        sl = self._get_slice(ref, posidx)
+        return DataView(ref, sl)
 
     def retrieve_feature_data(self, posidx, featidx):
         if self._feature_count() == 0:
@@ -184,7 +191,8 @@ class MultiTag(BaseTag):
             if not self._position_and_extent_in_data(da, offset, count):
                 raise OutOfBounds("Requested data slice out of the extent "
                                   "of the Feature!")
-            return DataView(da, count, offset)
+            sl = self._get_slice(da, posidx)
+            return DataView(da, sl)
         elif feat.link_type == LinkType.Indexed:
             if posidx > da.data_extent[0]:
                 raise OutOfBounds("Position is larger than the data stored "
@@ -197,11 +205,11 @@ class MultiTag(BaseTag):
             if not self._position_and_extent_in_data(da, offset, count):
                 OutOfBounds("Requested data slice out of the extent of the "
                             "Feature!")
-            return DataView(da, count, offset)
+            sl = tuple(slice(o, o+c) for o, c in zip(offset, count))
+            return DataView(da, sl)
         # For untagged return the full data
-        count = da.data_extent
-        offset = (0,) * len(count)
-        return DataView(da, count, offset)
+        sl = tuple(slice(0, c) for c in da.data_extent)
+        return DataView(da, sl)
 
     @property
     def references(self):
