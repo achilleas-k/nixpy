@@ -318,11 +318,13 @@ class Tag(BaseTag):
             if not self._position_and_extent_in_data(da, offset, count):
                 raise OutOfBounds("Requested data slice out of the extent "
                                   "of the Feature!")
-            return DataView(da, count, offset)
+            sl = tuple(slice(o, o+c) for o, c in zip(offset, count))
+            return DataView(da, sl)
         # For untagged and indexed return the full data
         count = da.data_extent
         offset = (0,) * len(count)
-        return DataView(da, count, offset)
+        sl = tuple(slice(0, c) for c in da.data_extent)
+        return DataView(da, sl)
 
     @property
     def references(self):

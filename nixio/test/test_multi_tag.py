@@ -7,7 +7,6 @@
 # LICENSE file in the root of the Project.
 
 from __future__ import (absolute_import, division, print_function)
-from __future__ import print_function
 import nixio as nix
 import unittest
 import numpy as np
@@ -289,7 +288,6 @@ class _TestMultiTag(unittest.TestCase):
         self.feature_tag.create_feature(index_data, nix.LinkType.Untagged)
 
         # preparations done, actually test
-        # print(self.feature_tag.features)
         assert(len(self.feature_tag.features) == 3)
 
         # indexed feature
