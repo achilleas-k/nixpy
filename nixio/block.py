@@ -7,7 +7,7 @@
 # LICENSE file in the root of the Project.
 from __future__ import (absolute_import, division, print_function)
 
-from .entity_with_metadata import EntityWithMetadata
+from .entity import Entity
 from .exceptions import exceptions
 from .group import Group
 from .data_array import DataArray
@@ -23,7 +23,7 @@ from sys import maxsize as maxint
 import numpy as np
 
 
-class Block(EntityWithMetadata):
+class Block(Entity):
 
     def __init__(self, nixparent, h5group):
         super(Block, self).__init__(nixparent, h5group)
@@ -33,11 +33,9 @@ class Block(EntityWithMetadata):
         self._multi_tags = None
         self._sources = None
 
-    @classmethod
-    def _create_new(cls, nixparent, h5parent, name, type_):
-        newentity = super(Block, cls)._create_new(nixparent, h5parent,
-                                                  name, type_)
-        return newentity
+    # @classmethod
+    # def _create_new(cls, nixparent, h5parent, name, type_):
+    #     return super(Block, cls).__init__(nixparent, h5parent, name, type_)
 
     # DataArray
     def _create_data_array(self, name, type_, data_type, shape):
