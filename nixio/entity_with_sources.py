@@ -7,7 +7,8 @@
 # LICENSE file in the root of the Project.
 from __future__ import (absolute_import, division, print_function)
 
-from .entity_with_metadata import EntityWithMetadata
+from .entity import Entity
+from .section import Section
 from .source import Source
 from .container import LinkContainer
 from . import util
@@ -35,7 +36,7 @@ class SourceLinkContainer(LinkContainer):
 
 class EntityWithSources(EntityWithMetadata):
 
-class EntityWithSources(EntityWithMetadata):
+class EntityWithSources(Entity):
 
     def __init__(self, nixparent, h5group):
         super(EntityWithSources, self).__init__(nixparent, h5group)
@@ -61,3 +62,25 @@ class EntityWithSources(EntityWithMetadata):
             self._sources = SourceLinkContainer("sources", self, Source,
                                                 self._parent.sources)
         return self._sources
+
+    @property
+    def metadata(self):
+        """
+        Associated metadata of the entity. Sections attached to the entity
+        via this attribute can provide additional annotations. This is an
+        optional read-write property, and can be None if no metadata is
+        available.
+
+        :type: Section
+        """
+        if "metadata" in self._h5group:
+            return Section(None, self._h5group.open_group("metadata"))
+        else:
+            return None
+
+    @metadata.setter
+    def metadata(self, sect):
+        if not isinstance(sect, Section):
+            raise TypeError("Error setting metadata to {}. Not a Section."
+                            .format(sect))
+        self._h5group.create_link(sect, "metadata")
