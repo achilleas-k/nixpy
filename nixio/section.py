@@ -13,7 +13,7 @@ from sys import maxsize as maxint
 from operator import attrgetter
 from collections import Sequence
 
-from .entity import NamedEntity
+from .entity import Entity
 from .property import Property
 from .util import find as finders
 from .util.proxy_list import ProxyList
@@ -62,7 +62,7 @@ class PropertyProxyList(ProxyList):
                                                 "_delete_property_by_id")
 
 
-class Section(NamedEntity):
+class Section(Entity):
 
     def __init__(self, nixparent, h5group):
         super(Section, self).__init__(nixparent, h5group)
