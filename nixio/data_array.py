@@ -9,7 +9,7 @@ from numbers import Number
 import numpy as np
 import sys
 
-from .entity_with_sources import EntityWithSources
+from .entity import Entity
 from .value import DataType
 from .dimensions import (SampledDimension, RangeDimension, SetDimension,
                          DimensionType)
@@ -360,7 +360,7 @@ class DataSet(DataSetMixin):
         return dataset.dtype
 
 
-class DataArray(EntityWithSources, DataSet, DataArrayMixin):
+class DataArray(Entity, DataSet, DataArrayMixin):
 
     def __init__(self, nixparent, h5group):
         super(DataArray, self).__init__(nixparent, h5group)
