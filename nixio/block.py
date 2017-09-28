@@ -34,10 +34,6 @@ class Block(Entity):
         self._multi_tags = None
         self._sources = None
 
-    # @classmethod
-    # def _create_new(cls, nixparent, h5parent, name, type_):
-    #     return super(Block, cls).__init__(nixparent, h5parent, name, type_)
-
     # DataArray
     def _create_data_array(self, name, type_, data_type, shape):
         util.check_entity_name_and_type(name, type_)
