@@ -5,16 +5,12 @@
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted under the terms of the BSD License. See
 # LICENSE file in the root of the Project.
-
 from __future__ import (absolute_import, division, print_function)
+from six import string_types
+
 import nixio as nix
 import unittest
 from nixio.util.proxy_list import ProxyList
-
-try:
-    basestring = basestring
-except NameError:  # 'basestring' is undefined, must be Python 3
-    basestring = (str, bytes)
 
 
 skip_cpp = not hasattr(nix, "core")
@@ -104,5 +100,5 @@ class TestProxyList(unittest.TestCase):
         assert(len(dict(self.mock.list.items())) == 5)
 
     def test_proxy_list_str(self):
-        assert(isinstance(str(self.mock.list), basestring))
-        assert(isinstance(repr(self.mock.list), basestring))
+        assert(isinstance(str(self.mock.list), string_types))
+        assert(isinstance(repr(self.mock.list), string_types))
