@@ -79,6 +79,7 @@ class Container(object):
 
 
 class LinkContainer(Container):
+
     def __init__(self, name, parent, itemclass, itemstore):
         """
         A LinkContainer acts as an interface to container groups in the backend
