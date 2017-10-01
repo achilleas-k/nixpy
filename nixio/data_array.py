@@ -20,64 +20,6 @@ from .metadata_reference import create_metadata_prop
 from .exceptions import InvalidUnit
 
 
-class DataArrayMixin(object):
-
-    @property
-    def data(self):
-        """
-        DEPRECATED DO NOT USE ANYMORE! Returns self
-
-        :type: :class:`~nixio.data_array.DataArray`
-        """
-        import warnings
-        warnings.warn("Call to deprecated property DataArray.data",
-                      category=DeprecationWarning)
-        return self
-
-    @property
-    def dimensions(self):
-        """
-        A property containing all dimensions of a DataArray. Dimensions can be
-        obtained via their index. Adding dimensions is done using the
-        respective append methods for dimension descriptors.
-        This is a read only attribute.
-
-        :type: ProxyList of dimension descriptors.
-        """
-        if not hasattr(self, "_dimensions"):
-            setattr(self, "_dimensions", DimensionProxyList(self))
-        return self._dimensions
-
-    def __eq__(self, other):
-        if hasattr(other, "id"):
-            return self.id == other.id
-        else:
-            return False
-
-    def __hash__(self):
-        """
-        Overwriting method __eq__ blocks inheritance of __hash__ in Python 3
-        hash has to be either explicitly inherited from parent class,
-        implemented or escaped
-        """
-        return hash(self.id)
-
-
-class SetDimensionMixin(object):
-
-    dimension_type = DimensionType.Set
-
-
-class RangeDimensionMixin(object):
-
-    dimension_type = DimensionType.Range
-
-
-class SampleDimensionMixin(object):
-
-    dimension_type = DimensionType.Sample
-
-
 class DimensionProxyList(object):
     """
     List proxy for the dimensions of a data array.
@@ -362,7 +304,7 @@ class DataSet(DataSetMixin):
         return dataset.dtype
 
 
-class DataArray(Entity, DataSet, DataArrayMixin):
+class DataArray(Entity, DataSet):
 
     def __init__(self, nixparent, h5group):
         super(DataArray, self).__init__(nixparent, h5group)
@@ -573,3 +515,31 @@ class DataArray(Entity, DataSet, DataArrayMixin):
                     "DataArray.unit"
                 )
         self._h5group.set_attr("unit", u)
+
+    @property
+    def dimensions(self):
+        """
+        A property containing all dimensions of a DataArray. Dimensions can be
+        obtained via their index. Adding dimensions is done using the
+        respective append methods for dimension descriptors.
+        This is a read only attribute.
+
+        :type: ProxyList of dimension descriptors.
+        """
+        if not hasattr(self, "_dimensions"):
+            setattr(self, "_dimensions", DimensionProxyList(self))
+        return self._dimensions
+
+    def __eq__(self, other):
+        if hasattr(other, "id"):
+            return self.id == other.id
+        else:
+            return False
+
+    def __hash__(self):
+        """
+        Overwriting method __eq__ blocks inheritance of __hash__ in Python 3
+        hash has to be either explicitly inherited from parent class,
+        implemented or escaped
+        """
+        return hash(self.id)
