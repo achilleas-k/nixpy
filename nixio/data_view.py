@@ -27,6 +27,10 @@ class DataView(DataSet):
     @property
     def data_extent(self):
         return tuple(s.stop - s.start for s in self._slice)
+    
+    @data_extent.setter
+    def data_extent(self, v):
+        raise AttributeError("can't set attribute")
 
     @property
     def data_type(self):
