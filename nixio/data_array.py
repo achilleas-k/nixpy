@@ -57,15 +57,13 @@ class DimensionProxyList(object):
         return str(self)
 
 
-class DataSetMixin(object):
+class DataSet(object):
     """
     Data IO object for DataArray.
     """
 
     def __array__(self):
-        # raw = np.empty(self.shape, dtype=self.dtype)
-        # self.read_direct(raw)
-        return self._read_data()[:]
+        return self._read_data()
 
     def __getitem__(self, index):
         return self._read_data(index)
@@ -251,9 +249,6 @@ class DataSetMixin(object):
         shape = list(filter(lambda x: x is not None, squeezed))
 
         return count, offset, shape
-
-
-class DataSet(DataSetMixin):
 
     def _write_data(self, data, sl=None):
         dataset = self._h5group.get_dataset("data")
