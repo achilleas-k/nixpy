@@ -9,9 +9,12 @@ from __future__ import (absolute_import, division, print_function)
 
 import numpy as np
 
+from .entity import Entity
+from .metadata_reference import create_metadata_prop
+from .source_link_container import SourceLinkContainer
+
 from .value import DataType
 from .data_array import DataArray
-from .entity_with_sources import EntityWithSources
 from .data_view import DataView
 from .feature import Feature
 from .exceptions import (OutOfBounds, IncompatibleDimensions,
@@ -212,6 +215,8 @@ class Tag(BaseTag):
 
     def __init__(self, nixparent, h5group):
         super(Tag, self).__init__(nixparent, h5group)
+        self.metadata = create_metadata_prop()
+        self._sources = None
 
     @classmethod
     def _create_new(cls, nixparent, h5parent, name, type_, position):
