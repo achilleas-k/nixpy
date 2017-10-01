@@ -229,7 +229,6 @@ class Block(Entity):
             raise exceptions.DuplicateName("create_data_array")
         da = DataArray._create_new(self, data_arrays, name, array_type,
                                    dtype, shape)
-        return da
         if data is not None:
             da.write_direct(data)
         return da
