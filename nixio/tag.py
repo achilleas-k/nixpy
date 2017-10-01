@@ -45,7 +45,7 @@ class FeatureProxyList(ProxyList):
         )
 
 
-class BaseTag(EntityWithSources):
+class BaseTag(Entity):
     """
     Base class for Tag and MultiTag
     """

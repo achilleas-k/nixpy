@@ -10,6 +10,8 @@ import numpy as np
 import sys
 
 from .entity import Entity
+from .source import Source
+from .container import LinkContainer
 from .value import DataType
 from .dimensions import (SampledDimension, RangeDimension, SetDimension,
                          DimensionType)

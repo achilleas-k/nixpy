@@ -91,7 +91,7 @@ class LinkContainer(Container):
         links to objects are indexed by their 'id', while normally they are
         indexed by 'name'.
 
-        Examples of containers:
+        Examples of link containers:
             Group.data_arrays
             Group.tags
             Group.multi_tags

@@ -178,6 +178,12 @@ class SourceLinkContainer(LinkContainer):
     # This is the same issue that we have with Sections. It should probably be
     # solved the same way
 
+    # NOTE: Source requires a different link container since a valid Source
+    # may exist anywhere beneath the root Block's child sources. The check for
+    # the Source's validity needs to be done with the find_sources() function
+    # down the entire tree, as opposed to the default LinkContainer.append()
+    # function which needs to only check the root Block's container.
+
     def append(self, item):
         if util.is_uuid(item):
             item = self._inst_item(self._backend.get_by_id(item))
