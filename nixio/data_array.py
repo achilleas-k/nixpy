@@ -390,6 +390,19 @@ class DataArray(Entity, DataSet, DataArrayMixin):
             data = super(DataArray, self)._read_data(sl)
         return data
 
+    @property
+    def sources(self):
+        """
+        A property containing all Sources referenced by the DataArray. Sources
+        can be obtained by index or their id. Sources can be removed from the
+        list, but removing a referenced Source will not remove it from the
+        file. New Sources can be added using the append method of the list.
+        This is a read only attribute.
+        """
+        if self._sources is None:
+            self._sources = SourceLinkContainer(self)
+        return self._sources
+
     def append_set_dimension(self):
         """
         Append a new SetDimension to the list of existing dimension
