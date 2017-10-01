@@ -6,10 +6,11 @@
 # modification, are permitted under the terms of the BSD License. See
 # LICENSE file in the root of the Project.
 from __future__ import (absolute_import, division, print_function)
-import numpy as np
 
+from .metadata_reference import create_metadata_prop
 from .tag import BaseTag
 from .data_array import DataArray
+from .source_link_container import SourceLinkContainer
 from .data_view import DataView
 from .link_type import LinkType
 from .exceptions import (OutOfBounds, IncompatibleDimensions,
@@ -22,6 +23,8 @@ class MultiTag(BaseTag):
 
     def __init__(self, nixparent, h5group):
         super(MultiTag, self).__init__(nixparent, h5group)
+        self.metadata = create_metadata_prop()
+        self._sources = None
 
     @classmethod
     def _create_new(cls, nixparent, h5parent, name, type_, positions):

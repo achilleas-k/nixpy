@@ -14,6 +14,7 @@ from .value import DataType
 from .dimensions import (SampledDimension, RangeDimension, SetDimension,
                          DimensionType)
 from . import util
+from .metadata_reference import create_metadata_prop
 
 from .exceptions import InvalidUnit
 
@@ -364,6 +365,8 @@ class DataArray(Entity, DataSet, DataArrayMixin):
 
     def __init__(self, nixparent, h5group):
         super(DataArray, self).__init__(nixparent, h5group)
+        self.metadata = create_metadata_prop
+        self._sources = None
 
     @classmethod
     def _create_new(cls, nixparent, h5parent, name, type_, data_type, shape):

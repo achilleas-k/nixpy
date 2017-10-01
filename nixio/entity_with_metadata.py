@@ -6,11 +6,11 @@
 # modification, are permitted under the terms of the BSD License. See
 # LICENSE file in the root of the Project.
 
-from .entity import NamedEntity
+from .entity import Entity
 from .section import Section
 
 
-class EntityWithMetadata(NamedEntity):
+class EntityWithMetadata(Entity):
 
     def __init__(self, nixparent, h5group):
         super(EntityWithMetadata, self).__init__(nixparent, h5group)

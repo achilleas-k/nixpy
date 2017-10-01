@@ -7,20 +7,24 @@
 # LICENSE file in the root of the Project.
 from __future__ import (absolute_import, division, print_function)
 
-from .entity_with_sources import EntityWithSources
+from .entity import Entity
 from .data_array import DataArray
 from .tag import Tag
 from .multi_tag import MultiTag
+from .metadata_reference import create_metadata_prop
 from .container import LinkContainer
+from .source_link_container import SourceLinkContainer
 
 
-class Group(EntityWithSources):
+class Group(Entity):
 
     def __init__(self, nixparent, h5group):
         super(Group, self).__init__(nixparent, h5group)
         self._data_arrays = None
         self._tags = None
         self._multi_tags = None
+        self._sources = None
+        self.metadata = create_metadata_prop()
 
     @classmethod
     def _create_new(cls, nixparent, h5parent, name, type_):
