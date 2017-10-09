@@ -6,7 +6,10 @@
 # modification, are permitted under the terms of the BSD License. See
 # LICENSE file in the root of the Project.
 from __future__ import (absolute_import, division, print_function)
+import os
+import sys
 from six import string_types
+
 import unittest
 import numpy as np
 import nixio as nix
@@ -14,8 +17,10 @@ import nixio as nix
 
 class TestDataArray(unittest.TestCase):
 
+    testfilename = "dataarraytest.h5"
+
     def setUp(self):
-        self.file = nix.File.open("unittest.h5", nix.FileMode.Overwrite)
+        self.file = nix.File.open(self.testfilename, nix.FileMode.Overwrite)
         self.block = self.file.create_block("test block", "recordingsession")
         self.array = self.block.create_data_array("test array", "signal",
                                                   nix.DataType.Double, (100, ))

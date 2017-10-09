@@ -7,7 +7,6 @@ matrix:
     include:
         - python: "2.7_with_system_site_packages"
         - python: "3.4"
-          os: linux
         - python: "3.5"
         - python: "3.6"
           env: COVERALLS=1

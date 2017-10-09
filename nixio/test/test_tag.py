@@ -16,8 +16,10 @@ import nixio as nix
 
 class TestTag(unittest.TestCase):
 
+    testfilename = "tagtest.h5"
+
     def setUp(self):
-        self.file = nix.File.open("unittest.h5", nix.FileMode.Overwrite)
+        self.file = nix.File.open(self.testfilename, nix.FileMode.Overwrite)
         self.block = self.file.create_block("test block", "recordingsession")
 
         self.my_array = self.block.create_data_array("my array", "test",
@@ -219,3 +221,10 @@ class TestTag(unittest.TestCase):
         assert(data1.size == 1)
         assert(data2.size == 2)
         assert(data3.size == len(ramp_data))
+
+        # get by name
+        data1 = pos_tag.retrieve_feature_data(number_feat.name)
+        data2 = pos_tag.retrieve_feature_data(ramp_feat.name)
+
+        assert(data1.size == 1)
+        assert(data2.size == 2)

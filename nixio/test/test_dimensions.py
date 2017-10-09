@@ -22,8 +22,10 @@ test_labels = tuple([str(i) + "_label" for i in range(10)])
 
 class TestDimensions(unittest.TestCase):
 
+    testfilename = "dimtest.h5"
+
     def setUp(self):
-        self.file = nix.File.open("unittest.h5", nix.FileMode.Overwrite)
+        self.file = nix.File.open(self.testfilename, nix.FileMode.Overwrite)
         self.block = self.file.create_block("test block", "recordingsession")
         self.array = self.block.create_data_array("test array", "signal",
                                                   nix.DataType.Float, (0, ))

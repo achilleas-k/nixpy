@@ -7,15 +7,26 @@
 # LICENSE file in the root of the Project.
 
 from __future__ import (absolute_import, division, print_function)
-import nixio as nix
+import os
+
 import unittest
 import numpy as np
 
+import nixio as nix
 
-class _TestMultiTag(unittest.TestCase):
+
+class MultiTagTestBase(unittest.TestCase):
+
+    backend = None
+
+    testfilename = "mtagtest.h5"
 
     def setUp(self):
-        self.file = nix.File.open("unittest.h5", nix.FileMode.Overwrite)
+        iv = 1.0
+        ticks = [1.2, 2.3, 3.4, 4.5, 6.7]
+        unit = "ms"
+
+        self.file = nix.File.open(self.testfilename, nix.FileMode.Overwrite)
         self.block = self.file.create_block("test block", "recordingsession")
 
         self.my_array = self.block.create_data_array("my array", "test",
@@ -376,6 +387,23 @@ class _TestMultiTag(unittest.TestCase):
         assert(len(data_view.shape) == 3)
 
         data_view = self.feature_tag.retrieve_feature_data(1, 1)
+        assert(len(data_view.shape) == 3)
+
+        # === retrieve by name ===
+        # indexed feature
+        feat_data = self.feature_tag.retrieve_feature_data(0, index_data.name)
+        assert(len(feat_data.shape) == 2)
+        assert(feat_data.size == 10)
+        assert(np.sum(feat_data) == 55)
+
+        data_view = self.feature_tag.retrieve_feature_data(9, index_data.name)
+        assert(np.sum(data_view[:, :]) == 9055)
+
+        # tagged feature
+        data_view = self.feature_tag.retrieve_feature_data(0, tagged_data.name)
+        assert(len(data_view.shape) == 3)
+
+        data_view = self.feature_tag.retrieve_feature_data(1, tagged_data.name)
         assert(len(data_view.shape) == 3)
 
         def out_of_bounds():

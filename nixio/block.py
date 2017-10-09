@@ -23,7 +23,6 @@ from .util import find as finders
 from sys import maxsize as maxint
 import numpy as np
 
-from .util import find as finders
 
 class Block(Entity):
 
