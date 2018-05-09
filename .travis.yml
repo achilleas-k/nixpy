@@ -74,9 +74,9 @@ install:
 script:
 - python setup.py build
 - if [ $COVERALLS = 1 ]; then
-    coverage${PYVER} run --source=nixio setup.py test --addopts --force-compat && coverage${PYVER} report -m;
+    coverage${PYVER} run --source=nixio setup.py test --addopts "--force-compat -s" && coverage${PYVER} report -m;
   else
-    python setup.py test --addopts --force-compat;
+    python setup.py test --addopts "--force-compat -s";
   fi;
 
 after_success:
