@@ -55,24 +55,22 @@ install:
         }
 
     - ps: |
-        if ($env:withnix -eq "--with-nix") {
-            mkdir "$env:NIX_BUILD_DIR"
-            cd "$env:NIX_BUILD_DIR"
-            mkdir nix
-            cd nix
+        mkdir "$env:NIX_BUILD_DIR"
+        cd "$env:NIX_BUILD_DIR"
+        mkdir nix
+        cd nix
 
-            $env:nix_exe_url = "$env:NIX_APPVEYOR_ROOT/$env:avfname`?$env:avjob"
-            Write-Host "Downloading $env:nix_exe_url"
+        $env:nix_exe_url = "$env:NIX_APPVEYOR_ROOT/$env:avfname`?$env:avjob"
+        Write-Host "Downloading $env:nix_exe_url"
 
-            Invoke-WebRequest -URI $env:nix_exe_url -OutFile "nix.exe"
+        Invoke-WebRequest -URI $env:nix_exe_url -OutFile "nix.exe"
 
-            7z x nix.exe
+        7z x nix.exe
 
-            cd ..
+        cd ..
 
-            $env:BOOST_INC_DIR = "$env:BOOST_ROOT\include"
-            $env:BOOST_LIB_DIR = "$env:BOOST_ROOT\lib"
-        }
+        $env:BOOST_INC_DIR = "$env:BOOST_ROOT\include"
+        $env:BOOST_LIB_DIR = "$env:BOOST_ROOT\lib"
 
     - python -m pip install numpy h5py wheel
 
