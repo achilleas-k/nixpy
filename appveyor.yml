@@ -84,7 +84,7 @@ build_script:
     - python setup.py build
 
 test_script:
-    - python setup.py test --addopts --force-compat
+    - python setup.py test --addopts "--force-compat -s"
 
 after_test:
     - ps: mkdir "$env:DEPLOY_DIR"
