@@ -38,7 +38,6 @@ init:
   - python -c "import sys;print('Python version is {}'.format(sys.version))"
 
 install:
-
     - ps: |
         if ($env:bits -eq "64") {
             $env:vcvars = "x86_amd64"
@@ -48,6 +47,7 @@ install:
             $env:vcvars = "x86"
             $env:avjob = "job=Environment%3A%20PLATFORM%3Dx86%2C%20CONFIGURATION%3DRelease"
             $env:avfname = "nix-$env:NIX_VERSION-win32.exe"
+
         }
     - ps: |
         if ($env:pyver -eq "2") {
@@ -73,6 +73,11 @@ install:
         $env:BOOST_LIBDIR = "$env:BOOST_ROOT\lib"
         $env:NIX_INCDIR = "$env:NIX_BUILD_DIR\include"
         $env:NIX_LIBDIR = "$env:NIX_BUILD_DIR\lib"
+
+        echo "call ""\Program Files (x86)\Microsoft Visual Studio 12.0\VC\vcvarsall.bat"" $vcvars" | out-file -filepath "setvcvars.bat" -encoding ASCII
+        .\setvcvars.bat
+
+        Compile tests manually instead; this is getting tedious
 
     - python -m pip install numpy h5py wheel
 

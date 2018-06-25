@@ -56,11 +56,10 @@ def maketests(dest):
     include_dirs = [boost_inc_dir, nix_inc_dir, 'src']
     runtime_dirs = [os.getenv("LD_LIBRARY_PATH", ""), "/usr/local/lib"]
     libraries = [nix_lib]
-    compile_args = ['std=c++11']
     if WINDOWS:
-        compile_args = ['/{}'.format(ca) for ca in compile_args]
+        compile_args = ["/std:c++11"]
     else:
-        compile_args = ['--{}'.format(ca) for ca in compile_args]
+        compile_args = ["--std=c++11"]
 
     print("Compiling {}".format(" ".join(filenames)))
     success = cc(filenames, dest,
