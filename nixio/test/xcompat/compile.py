@@ -8,6 +8,11 @@ from distutils import ccompiler
 from distutils.errors import CompileError, LinkError
 
 
+WINDOWS = False
+if platform.platform().startswith("Windows"):
+    WINDOWS = True
+
+
 def cc(filenames, dest,
        library_dirs=None, include_dirs=None,
        libraries=None, compile_args=None,
@@ -21,7 +26,7 @@ def cc(filenames, dest,
         [compiler.add_include_dir(incd) for incd in include_dirs]
     if libraries:
         [compiler.add_library(lib) for lib in libraries]
-    if runtime_lib_dirs and not platform.platform().startswith("Windows"):
+    if runtime_lib_dirs and not WINDOWS:
         [compiler.add_runtime_library_dir(rund) for rund in runtime_lib_dirs]
 
     try:
@@ -51,7 +56,11 @@ def maketests(dest):
     include_dirs = [boost_inc_dir, nix_inc_dir, 'src']
     runtime_dirs = [os.getenv("LD_LIBRARY_PATH", ""), "/usr/local/lib"]
     libraries = [nix_lib]
-    compile_args = ['--std=c++11']
+    compile_args = ['std=c++11']
+    if WINDOWS:
+        compile_args = ['/{}'.format(ca) for ca in compile_args]
+    else:
+        compile_args = ['--{}'.format(ca) for ca in compile_args]
 
     print("Compiling {}".format(" ".join(filenames)))
     success = cc(filenames, dest,
