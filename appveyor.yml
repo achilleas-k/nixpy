@@ -69,8 +69,10 @@ install:
 
         cd ..
 
-        $env:BOOST_INC_DIR = "$env:BOOST_ROOT\include"
-        $env:BOOST_LIB_DIR = "$env:BOOST_ROOT\lib"
+        $env:BOOST_INCDIR = "$env:BOOST_ROOT\include"
+        $env:BOOST_LIBDIR = "$env:BOOST_ROOT\lib"
+        $env:NIX_INCDIR = "$env:NIX_BUILD_DIR\include"
+        $env:NIX_LIBDIR = "$env:NIX_BUILD_DIR\lib"
 
     - python -m pip install numpy h5py wheel
 
