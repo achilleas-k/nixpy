@@ -19,7 +19,7 @@ We strongly recommend using the latest stable version, which can be found on PyP
 About NIXPY
 -----------
 
-The *NIXPY* project is an extension to `NIX <https://github.com/G-Node/nix>`_ and provides Python bindings for *NIX*.
+*NIXPY* is a reimplementation of NIX_ in Python.
 
 Getting Started
 ---------------
@@ -31,10 +31,10 @@ The simplest way to install *NIXPY* is from PyPI using pip. The name of the pack
 Bindings for C++ NIX
 --------------------
 
-The setup script will automatically build the bindings for *NIX* if it is detected on the system, otherwise only the pure Python version will be installed.
-
-For instructions on building *NIX*, see the `NIX README <https://github.com/G-Node/nix/blob/master/README.md>`_ file.
-
+Originally, *NIXPY* served as a set of Python bindings to the C++ (reference) implementation of NIX_.
+For a while, the bindings and a full reimplementation of NIX in Python were both included in this module.
+Now, since v1.5, the bindings have been removed and only the reimplementation is supported and maintained.
+This was done to make deployment simpler for Python users and to make the library simpler to maintain for the developers and contributors.
 
 To check if installed properly
 ------------------------------
@@ -55,3 +55,4 @@ The API documentation can be found `here <http://g-node.github.io/nixpy/>`_.
 
 
 .. _nixio: https://pypi.python.org/pypi/nixio
+.. _NIX: https://github.com/G-Node/nix
