@@ -58,7 +58,7 @@ class TestFeatures(unittest.TestCase):
             self.feature_1.link_type = None
 
         assert(self.feature_1.link_type is not None)
-        self.assertRaises(Exception, set_none)
+        self.assertRaises(RuntimeError, set_none)
 
         self.feature_1.link_type = nix.LinkType.Untagged
         assert(self.feature_1.link_type == nix.LinkType.Untagged)
@@ -68,7 +68,7 @@ class TestFeatures(unittest.TestCase):
             self.feature_1.data = None
 
         assert(self.feature_1.data is not None)
-        self.assertRaises(Exception, set_none)
+        self.assertRaises(TypeError, set_none)
 
         new_data_ref = self.block.create_data_array("test", "current",
                                                     nix.DataType.Float, (0, ))

@@ -58,7 +58,7 @@ class TestGroups(unittest.TestCase):
             self.my_group.type = None
 
         assert(self.my_group.type is not None)
-        self.assertRaises(Exception, set_none)
+        self.assertRaises(AttributeError, set_none)
 
         self.my_group.type = "foo type"
         assert(self.my_group.type == "foo type")

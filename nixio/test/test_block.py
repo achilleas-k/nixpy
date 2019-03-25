@@ -43,7 +43,7 @@ class TestBlock(unittest.TestCase):
             self.block.type = None
 
         assert(self.block.type is not None)
-        self.assertRaises(Exception, set_none)
+        self.assertRaises(AttributeError, set_none)
 
         self.block.type = "foo type"
         assert(self.block.type == "foo type")

@@ -48,7 +48,7 @@ class TestDataArray(unittest.TestCase):
             self.array.type = None
 
         assert(self.array.type is not None)
-        self.assertRaises(Exception, set_none)
+        self.assertRaises(AttributeError, set_none)
 
         self.array.type = "foo type"
         assert(self.array.type == "foo type")

@@ -48,7 +48,7 @@ class TestSources(unittest.TestCase):
             self.source.type = None
 
         assert(self.source.type is not None)
-        self.assertRaises(Exception, set_none)
+        self.assertRaises(AttributeError, set_none)
 
         self.source.type = "foo type"
         assert(self.source.type == "foo type")

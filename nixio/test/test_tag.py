@@ -57,7 +57,7 @@ class TestTags(unittest.TestCase):
             self.my_tag.type = None
 
         assert(self.my_tag.type is not None)
-        self.assertRaises(Exception, set_none)
+        self.assertRaises(AttributeError, set_none)
 
         self.my_tag.type = "foo type"
         assert(self.my_tag.type == "foo type")

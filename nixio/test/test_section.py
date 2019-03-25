@@ -63,7 +63,7 @@ class TestSections(unittest.TestCase):
             self.section.type = None
 
         assert(self.section.type is not None)
-        self.assertRaises(Exception, set_none)
+        self.assertRaises(AttributeError, set_none)
 
         self.section.type = "foo type"
         assert(self.section.type == "foo type")
