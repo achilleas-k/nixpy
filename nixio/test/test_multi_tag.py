@@ -453,4 +453,4 @@ class TestMultiTags(unittest.TestCase):
         def out_of_bounds():
             self.feature_tag.feature_data(2, 1)
 
-        self.assertRaises(IndexError,  out_of_bounds)
+        self.assertRaises(nix.exceptions.OutOfBounds,  out_of_bounds)
