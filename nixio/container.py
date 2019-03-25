@@ -53,7 +53,8 @@ class Container(object):
         if not isinstance(item, self._itemclass):
             raise TypeError(
                 "Wrong item type: {} required or the name or ID of one".format(
-                    self._itemclass.__name__)
+                    self._itemclass.__name__
+                )
             )
 
         root = self._backend.h5root
