@@ -350,24 +350,23 @@ class Block(Entity):
     @staticmethod
     def _pp(obj, ml, indent, ex, grp=False):
         spaces = " " * (indent)
-        if grp == True:
-            prefix = "*"
-        else:
-            prefix = ""
+        prefix = "*" if grp else ""
         if ex:
             stat = ""
             if isinstance(obj, MultiTag):
-                stat = "Position Shape:{} Units: {}".format(
+                stat = "Position Shape: {} Units: {}".format(
                     obj.positions.shape,
-                    obj.units)
+                    obj.units
+                )
             elif isinstance(obj, Tag):
-                stat = "Position Length:{} Units: {}".format(len(obj.position),
-                                                             obj.units)
+                stat = "Position Length: {} Units: {}".format(
+                    len(obj.position), obj.units
+                )
             elif isinstance(obj, DataFrame):
-                stat = "Shape: {} Columns:{}".format(obj.shape,
-                                                     obj.column_names)
+                stat = "Shape: {} Columns: {}".format(obj.shape,
+                                                      obj.column_names)
             elif isinstance(obj, DataArray):
-                stat = "Shape: {} Unit:{}".format(obj.shape, obj.unit)
+                stat = "Shape: {} Unit: {}".format(obj.shape, obj.unit)
             p = "{}{}{}".format(spaces, prefix, obj)
             n = "{}  {}".format(spaces, stat)
         else:
