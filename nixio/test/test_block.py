@@ -83,6 +83,12 @@ class TestBlock(unittest.TestCase):
         assert(data_array.id == self.block.data_arrays[0].id)
         assert(data_array.id == self.block.data_arrays[-1].id)
 
+        existing_name = self.block.data_arrays[0].name
+        self.assertRaises(
+            nix.exceptions.DuplicateName,
+            self.block.create_data_array, existing_name, "error", data=[0]
+        )
+
         del self.block.data_arrays[0]
 
         assert(len(self.block.data_arrays) == 0)
@@ -106,9 +112,20 @@ class TestBlock(unittest.TestCase):
         assert(multi_tag.id == self.block.multi_tags[0].id)
         assert(multi_tag.id == self.block.multi_tags[-1].id)
 
+        existing_name = self.block.multi_tags[0].name
+        self.assertRaises(
+            nix.exceptions.DuplicateName,
+            self.block.create_multi_tag, existing_name, "error", data_array,
+        )
+
         del self.block.multi_tags[0]
 
         assert(len(self.block.multi_tags) == 0)
+
+        self.assertRaises(
+            TypeError,
+            self.block.create_multi_tag, "noda", "noda", positions=[0]
+        )
 
     def test_block_tags(self):
         assert(len(self.block.tags) == 0)
@@ -123,6 +140,12 @@ class TestBlock(unittest.TestCase):
 
         assert(tag.id == self.block.tags[0].id)
         assert(tag.id == self.block.tags[-1].id)
+
+        existing_name = self.block.tags[0].name
+        self.assertRaises(
+            nix.exceptions.DuplicateName,
+            self.block.create_tag, existing_name, "error", [0],
+        )
 
         del self.block.tags[0]
 
@@ -141,6 +164,12 @@ class TestBlock(unittest.TestCase):
 
         assert(source.id == self.block.sources[0].id)
         assert(source.id == self.block.sources[-1].id)
+
+        existing_name = self.block.sources[0].name
+        self.assertRaises(
+            nix.exceptions.DuplicateName,
+            self.block.create_source, existing_name, "error",
+        )
 
         del self.block.sources[0]
 
@@ -182,6 +211,39 @@ class TestBlock(unittest.TestCase):
         assert(group.id == self.block.groups[0].id)
         assert(group.id == self.block.groups[-1].id)
 
+        existing_name = self.block.groups[0].name
+        self.assertRaises(
+            nix.exceptions.DuplicateName,
+            self.block.create_group, existing_name, "error",
+        )
+
         del self.block.groups[0]
 
         assert(len(self.block.groups) == 0)
+
+    def test_block_metadata(self):
+        assert self.block.metadata is None
+
+        def setter_type_error():
+            self.block.metadata = 10
+
+        self.assertRaises(TypeError, setter_type_error)
+
+        del self.block.metadata
+        assert self.block.metadata is None
+
+        rootsection = self.file.create_section("metadata", "root")
+        self.block.metadata = rootsection
+
+        assert self.block.metadata is not None
+
+        self.assertRaises(TypeError, setter_type_error)
+        assert self.block.metadata == rootsection
+
+        print(self.block.name)
+
+        del self.block.metadata
+        print(self.block.name)
+        assert self.block.metadata is None
+
+        print(self.block.name)
