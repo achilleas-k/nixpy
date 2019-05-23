@@ -63,7 +63,6 @@ class FileMode(object):
     Overwrite = 'w'
 
 
-
 def map_file_mode(mode) -> int:
     if mode == FileMode.ReadOnly:
         return h5py.h5f.ACC_RDONLY
