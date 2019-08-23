@@ -7,7 +7,8 @@
 # modification, are permitted under the terms of the BSD License. See
 # LICENSE file in the root of the Project.
 import numpy as np
-from typing import Tuple, List
+from typing import Tuple
+
 
 class DataSet(object):
     """
@@ -39,7 +40,7 @@ class DataSet(object):
         return self.shape[0]
 
     @property
-    def shape(self) -> Tuple[int]:
+    def shape(self) -> Tuple[int, ...]:
         """
         :type: tuple of data array dimensions.
         """
@@ -110,107 +111,22 @@ class DataSet(object):
 
         offset = tuple(0 if i != axis else x for i, x in enumerate(self.shape))
         count = data.shape
-        enlarge = tuple(self.shape[i] + (0 if i != axis else x)
+        enlarge = tuple(int(self.shape[i] + (0 if i != axis else x))
                         for i, x in enumerate(data.shape))
         self.data_extent = enlarge
         sl = tuple(slice(o, c+o) for o, c in zip(offset, count))
         self._write_data(data, sl)
 
-    @staticmethod
-    def __index_to_tuple(index) -> Tuple:
-        tidx = type(index)
-
-        if tidx == tuple:
-            return index
-        elif tidx == int or tidx == slice:
-            return (index, )
-        elif tidx == type(Ellipsis):
-            return ()
-        else:
-            raise IndexError("Unsupported index")
-
-    @staticmethod
-    def __complete_slices(shape, index) -> slice:
-        if type(index) is slice:
-            if index.step is not None:
-                raise IndexError('Invalid index, stepping unsupported')
-            start = index.start
-            stop = index.stop
-            if start is None:
-                start = 0
-            elif start < 0:
-                start = shape + start
-            if stop is None:
-                stop = shape
-            elif stop < 0:
-                stop = shape + stop
-            index = slice(start, stop, index.step)
-        elif type(index) is int:
-            if index < 0:
-                index = shape + index
-                index = slice(index, index+1)
-            else:
-                index = slice(index, index+1)
-        elif index is None:
-            index = slice(0, shape)
-        else:
-            raise IndexError('Invalid index')
-        return index
-
-    @staticmethod
-    def __fill_none(shape, index, to_replace=1) -> Tuple[None]:
-        size = len(shape) - len(index) + to_replace
-        return tuple([None] * size)
-
-    def __tuple_to_count_offset_shape(self, index) -> Tuple[Tuple, Tuple, List]:
-        # precondition: type(index) == tuple and len(index) >= 1
-        fill_none = self.__fill_none
-        shape = self.shape
-
-        if index[0] is Ellipsis:
-            index = fill_none(shape, index) + index[1:]
-        if index[-1] is Ellipsis:
-            # if we have a trailing ellipsis we just cut it away
-            # and let complete_slices do the right thing
-            index = index[:-1]
-
-        # here we handle Ellipsis in the middle of the tuple
-        # we *can* only handle one, if there are more, then
-        # __complete_slices will raise a InvalidIndex error
-        pos = index.index(Ellipsis) if Ellipsis in index else -1
-        if pos > -1:
-            index = index[:pos] + fill_none(shape, index) + index[pos+1:]
-
-        # in python3 map does not work with None therefore if
-        # len(shape) != len(index) we wont get the expected
-        # result. We therefore need to fill up the missing values
-        index = index + fill_none(shape, index, to_replace=0)
-
-        completed = list(map(self.__complete_slices, shape, index))
-        combined = list(map(lambda s: (s.start, s.stop), completed))
-        count = tuple(x[1] - x[0] for x in combined)
-        offset = [x for x in zip(*combined)][0]
-
-        # drop all indices from count that came from single ints
-        # NB: special case when we only have ints, e.g. (int, ) then
-        # we get back the empty tuple and this is what we want,
-        # because it indicates a scalar result
-        squeezed = map(lambda i, c: c if type(i) != int
-                       else None, index, count)
-        shape = list(filter(lambda x: x is not None, squeezed))
-
-        return count, offset, shape
-
     def _write_data(self, data, sl=None) -> None:
         dataset = self._h5group.get_dataset("data")
         dataset.write_data(data,  sl)
 
-    def _read_data(self, sl=None) -> None:
+    def _read_data(self, sl=None) -> np.ndarray:
         dataset = self._h5group.get_dataset("data")
         return dataset.read_data(sl)
 
     @property
-    def data_extent(self) -> Tuple[int]:
+    def data_extent(self) -> Tuple[int, ...]:
         """
         The size of the data.
 
