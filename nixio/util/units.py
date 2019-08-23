@@ -261,9 +261,10 @@ def split_compound(compound_unit):
             atomic_units.append(unit)
         sep = suffix[0]
         match = opt_pup.match(suffix[1:])
-    unit = match.group(0)
-    if sep == "/":
-        atomic_units.append(invert_power(unit))
-    else:
-        atomic_units.append(unit)
+    if match:
+        unit = match.group(0)
+        if sep == "/":
+            atomic_units.append(invert_power(unit))
+        else:
+            atomic_units.append(unit)
     return tuple(atomic_units)
