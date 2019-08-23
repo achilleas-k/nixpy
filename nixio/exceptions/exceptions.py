@@ -10,19 +10,18 @@
 
 class DuplicateName(Exception):
 
-    def __init__(self, caller, *args, **kwargs):
+    def __init__(self, caller, *args):
         self.message = ("Duplicate name - "
                         "names have to be unique for a given "
                         "entity type & parent. ({})").format(caller)
-        super(DuplicateName, self).__init__(self.message, *args, **kwargs)
+        super(DuplicateName, self).__init__(self.message, *args)
 
 
 class UninitializedEntity(Exception):
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args):
         self.message = "The Entity being accessed is uninitialized or empty."
-        super(UninitializedEntity, self).__init__(self.message,
-                                                  *args, **kwargs)
+        super(UninitializedEntity, self).__init__(self.message, *args)
 
 
 class InvalidUnit(ValueError):
@@ -42,9 +41,9 @@ class InvalidAttrType(TypeError):
 
 class InvalidEntity(Exception):
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args):
         self.message = "Invalid entity found in HDF5 file."
-        super(InvalidEntity, self).__init__(self.message, *args, **kwargs)
+        super(InvalidEntity, self).__init__(self.message, *args)
 
 
 class OutOfBounds(IndexError):
