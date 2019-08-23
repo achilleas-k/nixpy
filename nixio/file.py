@@ -12,10 +12,7 @@ import gc
 import numpy as np
 from warnings import warn
 
-try:
-    from sys import maxint
-except ImportError:
-    from sys import maxsize as maxint
+from sys import maxsize as maxint
 import h5py
 
 from .hdf5.h5group import H5Group
@@ -28,7 +25,7 @@ from .util import find as finders
 from .validate import Validate
 from .compression import Compression
 from .dimensions import RangeDimension, SetDimension, SampledDimension
-from typing import AnyStr, List, Optional, Union
+from typing import AnyStr, List
 
 
 FILE_FORMAT = "nix"
@@ -331,7 +328,8 @@ class File(object):
             print("No errors found: The file is a valid NIX file")
             return errors
 
-    def pprint(self, indent=2, max_length=120, extra=True, max_depth=3) -> None:
+    def pprint(self, indent=2, max_length=120, extra=True, max_depth=3)\
+            -> None:
         """
         Pretty Printing the Data and MetaData Tree of the whole File
 
@@ -356,7 +354,8 @@ class File(object):
 
     # TODO: if same file, set_attr("entity_id", id_)
 
-    def copy_section(self, obj, children=True, keep_id=True, name="") -> Section:
+    def copy_section(self, obj, children=True, keep_id=True, name="")\
+            -> Section:
         """
         Copy a section to the file.
 
