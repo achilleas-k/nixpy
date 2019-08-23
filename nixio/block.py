@@ -8,18 +8,12 @@
 # LICENSE file in the root of the Project.
 
 from __future__ import annotations
-try:
-    from sys import maxint
-except ImportError:
-    from sys import maxsize as maxint
+from sys import maxsize as maxint
 import numpy as np
 from inspect import isclass
 from six import string_types
-from typing import List, Union
-try:
-    from collections.abc import OrderedDict
-except ImportError:
-    from collections import OrderedDict
+from typing import List, Union, Optional
+from collections import OrderedDict
 import sys
 
 from .util import find as finders
@@ -40,18 +34,20 @@ from .section import Section
 
 class Block(Entity):
 
-    def __init__(self, nixparent, h5group, compression=Compression.Auto) -> None:
+    def __init__(self, nixparent, h5group, compression=Compression.Auto)\
+            -> None:
         super(Block, self).__init__(nixparent, h5group)
-        self._groups = None
-        self._data_arrays = None
-        self._tags = None
-        self._multi_tags = None
-        self._sources = None
-        self._compr = compression
-        self._data_frames = None
+        self._groups: Optional[Container] = None
+        self._data_arrays: Optional[Container] = None
+        self._tags: Optional[Container] = None
+        self._multi_tags: Optional[Container] = None
+        self._sources: Optional[SourceContainer] = None
+        self._compr: Optional[Container] = compression
+        self._data_frames: Optional[Container] = None
 
     @classmethod
-    def _create_new(cls, nixparent, h5parent, name, type_, compression) -> Entity:
+    def _create_new(cls, nixparent, h5parent, name, type_, compression)\
+            -> Block:
         newentity = super(Block, cls)._create_new(nixparent, h5parent,
                                                   name, type_)
         newentity._compr = compression
@@ -225,7 +221,7 @@ class Block(Entity):
         if compression == Compression.Auto:
             compression = self._compr
         da = DataArray._create_new_da(self, data_arrays, name, array_type,
-                                   dtype, shape, compression)
+                                      dtype, shape, compression)
         if data is not None:
             da.write_direct(data)
         return da
@@ -301,8 +297,8 @@ class Block(Entity):
                         for nam, dt in zip(col_names, col_dtypes)
                     )
                 else:  # col_dtypes is None and data is None
-                    raise (ValueError,
-                           "The data type of each column have to be specified")
+                    msg = "The data type of each column have to be specified"
+                    raise ValueError(msg)
             else:  # if col_names is None
                 if data is not None and type(data[0]) == np.void:
                     col_dtype = data[0].dtype
@@ -316,9 +312,9 @@ class Block(Entity):
 
                 else:
                     # data is None or type(data[0]) != np.void
-                    # data_type doesnt matter
-                    raise (ValueError,
-                           "No information about column names is provided!")
+                    # data_type doesn't matter
+                    msg = "No information about column names is provided!"
+                    raise ValueError(msg)
 
         if col_dict is not None:
             for nam, dt in col_dict.items():
@@ -364,7 +360,8 @@ class Block(Entity):
             limit = maxint
         return finders._find_sources(self, filtr, limit)
 
-    def pprint(self, indent=2, max_length=120, extra=True, start_depth=0) -> None:
+    def pprint(self, indent=2, max_length=120, extra=True, start_depth=0)\
+            -> None:
         """
         Pretty Printing the Data and MetaData Tree of the whole File
 
