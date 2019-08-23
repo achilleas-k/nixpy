@@ -6,6 +6,9 @@
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted under the terms of the BSD License. See
 # LICENSE file in the root of the Project.
+import numpy as np
+from typing import Union, Dict
+
 from ..datatype import DataType
 from .. import util
 
@@ -22,7 +25,7 @@ class H5DataSet(object):
             maxshape = (None,) * len(shape)
             if dtype == DataType.String:
                 dtype = util.vlen_str_dtype
-            comprargs = dict()
+            comprargs: Dict[str, Union[str, int]] = dict()
             if compression:
                 comprargs = {"compression": "gzip", "compression_opts": 6}
             self.dataset = self._parent.require_dataset(
@@ -43,7 +46,7 @@ class H5DataSet(object):
         else:
             self.dataset[sl] = data
 
-    def read_data(self, sl=None):
+    def read_data(self, sl=None) -> np.ndarray:
         if sl is None:
             return self.dataset[:]
         try:

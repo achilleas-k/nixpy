@@ -6,18 +6,13 @@
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted under the terms of the BSD License. See
 # LICENSE file in the root of the Project.
-
 import h5py
 import numpy as np
-from warnings import warn
 
 from .h5dataset import H5DataSet
 from ..datatype import DataType
-from ..block import Block
-from ..section import Section
 
 from .. import util
-from ..exceptions import InvalidEntity
 
 
 class H5Group(object):
@@ -326,28 +321,6 @@ class H5Group(object):
             return None
 
         return self.parent.h5root
-
-    @property
-    def root(self):
-        """
-        Returns the Block or top-level Section which contains this object.
-        Returns None if requested on the file root '/' or the /data or
-        /metadata groups.
-
-        :return: Top level object containing this group (Block or Section)
-        """
-        h5root = self.h5root
-        if h5root is None:
-            return None
-        topgroup = self.group.name.split("/")[1]
-        if topgroup == "data":
-            cls = Block
-        elif topgroup == "metadata":
-            cls = Section
-        else:
-            raise InvalidEntity
-        # TODO: Fix this
-        return cls(h5root)
 
     @property
     def parent(self):
