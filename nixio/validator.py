@@ -118,6 +118,24 @@ def check_file(nixfile):
         if warnings:
             results["warnings"][obj] = warnings
 
+    def filter_bad_children_names(container):
+        num_children = len(container)
+        good_names = list()
+        bad_names = list()
+        for idx in range(num_children):
+            try:
+                obj = container[idx]
+                good_names.append(obj.name)
+            except ValueError as ve:
+                h5grp = container._backend.get_by_pos(idx)
+                bad_names.append(h5grp.h5obj.name)
+        return good_names, bad_names
+
+    good, bad = filter_bad_children_names(nixfile.blocks)
+    print("Good:", good)
+    print("Bad: ", bad)
+
+
     # Blocks
     for block in nixfile.blocks:
         blk_errors, blk_warnings = check_block(block)
